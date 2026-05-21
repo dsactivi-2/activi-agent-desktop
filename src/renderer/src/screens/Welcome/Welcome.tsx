@@ -383,7 +383,7 @@ function Welcome({
               onClick={() => setPanel("remote")}
             >
               <Globe size={16} />
-              Connect to Remote Hermes
+              {t("welcome.connectRemote")}
             </button>
           </div>
         </>

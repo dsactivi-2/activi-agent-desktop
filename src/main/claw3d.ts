@@ -14,7 +14,7 @@ import { stripAnsi, safeWriteFile } from "./utils";
 import { getConnectionConfig } from "./config";
 import http from "http";
 
-const HERMES_OFFICE_REPO = "https://github.com/fathah/hermes-office";
+const HERMES_OFFICE_REPO = "https://github.com/dsactivi-2/office-kombiteks";
 const HERMES_OFFICE_DIR = join(HERMES_HOME, "hermes-office");
 const DEV_PID_FILE = join(HERMES_HOME, "claw3d-dev.pid");
 const ADAPTER_PID_FILE = join(HERMES_HOME, "claw3d-adapter.pid");
@@ -231,7 +231,7 @@ function getSavedWsUrl(): string {
 
 export function setClaw3dWsUrl(url: string): void {
   safeWriteFile(WS_URL_FILE, url);
-  // Also update the settings.json so Claw3D picks it up
+  // Also update the settings.json so the office UI picks it up
   writeClaw3dSettings(url);
 }
 
@@ -240,8 +240,8 @@ export function getClaw3dWsUrl(): string {
 }
 
 /**
- * Write Claw3D settings to ~/.openclaw/claw3d/settings.json
- * and .env in the claw3d directory so onboarding is skipped.
+ * Write Office Kombiteks settings to ~/.openclaw/claw3d/settings.json
+ * and .env in the office directory so onboarding is skipped.
  */
 function writeClaw3dSettings(wsUrl?: string): void {
   const url = wsUrl || getSavedWsUrl();
@@ -270,13 +270,13 @@ function writeClaw3dSettings(wsUrl?: string): void {
     /* non-fatal */
   }
 
-  // Write .env in claw3d directory
+  // Write .env in the office directory
   try {
     if (existsSync(HERMES_OFFICE_DIR)) {
       const envPath = join(HERMES_OFFICE_DIR, ".env");
       const port = getSavedPort();
       const envContent = [
-        "# Auto-configured by Hermes Desktop",
+        "# Auto-configured by Activi",
         `PORT=${port}`,
         `HOST=127.0.0.1`,
         `NEXT_PUBLIC_GATEWAY_URL=${url}`,
@@ -284,7 +284,7 @@ function writeClaw3dSettings(wsUrl?: string): void {
         `CLAW3D_GATEWAY_TOKEN=`,
         `HERMES_ADAPTER_PORT=18789`,
         `HERMES_MODEL=hermes`,
-        `HERMES_AGENT_NAME=Hermes`,
+        `HERMES_AGENT_NAME=Activi`,
         "",
       ].join("\n");
       safeWriteFile(envPath, envContent);
@@ -323,7 +323,7 @@ export interface Claw3dStatus {
   portInUse: boolean;
   wsUrl: string;
   error: string; // last error from either process
-  // Populated in SSH tunnel mode when a Claw3D / hermes-office service is
+  // Populated in SSH tunnel mode when an Office Kombiteks service is
   // running on the remote host. Renderer should prefer this over launching
   // a local dev server. Null/undefined when not in SSH mode or when the
   // remote service is unreachable.
@@ -387,7 +387,7 @@ function isAdapterRunning(): boolean {
 
 // Probe an HTTP endpoint with a short timeout. Returns true if any response
 // arrives (we don't care about the status code — even a 404 confirms a
-// listener). Used to detect remote Claw3D / hermes-office without dragging
+// listener). Used to detect remote Office Kombiteks without dragging
 // in the SSH tunnel machinery.
 function probeHttp(url: string, timeoutMs = 1500): Promise<boolean> {
   return new Promise((resolve) => {
@@ -418,11 +418,11 @@ export async function getClaw3dStatus(): Promise<Claw3dStatus> {
   const adapterUp = isAdapterRunning();
   const error = devServerError || adapterError;
 
-  // SSH tunnel mode: probe the remote host for a Claw3D / hermes-office
+  // SSH tunnel mode: probe the remote host for an Office Kombiteks
   // service. The official systemd unit binds Next.js to :3000 by default,
-  // so we try the SSH host at the saved Claw3D port. When reachable, the
+  // so we try the SSH host at the saved office port. When reachable, the
   // renderer can point its webview at it instead of asking the user to
-  // install Claw3D locally.
+  // install Office Kombiteks locally.
   let remoteUrl: string | null = null;
   const conn = getConnectionConfig();
   if (conn.mode === "ssh" && conn.ssh?.host) {
@@ -556,7 +556,7 @@ export async function setupClaw3d(
   const cloned = existsSync(join(HERMES_OFFICE_DIR, "package.json"));
 
   if (!cloned) {
-    emit(1, "Cloning Claw3D repository...", "Cloning from GitHub...\n");
+    emit(1, "Downloading Office Kombiteks...", "Downloading source files...\n");
     await new Promise<void>((resolve, reject) => {
       const gitClone = createCommandInvocation(git, [
         "clone",
@@ -572,15 +572,15 @@ export async function setupClaw3d(
       });
 
       proc.stdout?.on("data", (data: Buffer) => {
-        emit(1, "Cloning Claw3D repository...", stripAnsi(data.toString()));
+        emit(1, "Downloading Office Kombiteks...", stripAnsi(data.toString()));
       });
       proc.stderr?.on("data", (data: Buffer) => {
-        emit(1, "Cloning Claw3D repository...", stripAnsi(data.toString()));
+        emit(1, "Downloading Office Kombiteks...", stripAnsi(data.toString()));
       });
 
       proc.on("close", (code) => {
         if (code === 0) {
-          emit(1, "Cloning Claw3D repository...", "Clone complete.\n");
+          emit(1, "Downloading Office Kombiteks...", "Download complete.\n");
           resolve();
         } else {
           reject(new Error(`git clone failed (exit code ${code})`));
@@ -593,7 +593,7 @@ export async function setupClaw3d(
   } else {
     emit(
       1,
-      "Claw3D already cloned",
+      "Office Kombiteks already cloned",
       "Repository already exists, pulling latest...\n",
     );
     await new Promise<void>((resolve) => {
@@ -607,10 +607,10 @@ export async function setupClaw3d(
       });
 
       proc.stdout?.on("data", (data: Buffer) => {
-        emit(1, "Updating Claw3D...", stripAnsi(data.toString()));
+        emit(1, "Updating Office Kombiteks...", stripAnsi(data.toString()));
       });
       proc.stderr?.on("data", (data: Buffer) => {
-        emit(1, "Updating Claw3D...", stripAnsi(data.toString()));
+        emit(1, "Updating Office Kombiteks...", stripAnsi(data.toString()));
       });
 
       proc.on("close", (code) => {
@@ -658,7 +658,7 @@ export async function setupClaw3d(
     );
   });
 
-  // Write config files so Claw3D skips onboarding
+  // Write config files so Office Kombiteks skips onboarding
   writeClaw3dSettings();
 }
 
@@ -812,7 +812,7 @@ export function startAdapter(): boolean {
 
   proc.on("close", (code) => {
     if (code && code !== 0 && !adapterError) {
-      adapterError = `Hermes adapter exited with code ${code}`;
+      adapterError = `Office adapter exited with code ${code}`;
     }
     adapterProcess = null;
     cleanupPid(ADAPTER_PID_FILE);
@@ -847,7 +847,7 @@ export function startAll(): { success: boolean; error?: string } {
   if (!existsSync(join(HERMES_OFFICE_DIR, "node_modules"))) {
     return {
       success: false,
-      error: "Claw3D is not installed. Please install it first.",
+      error: "Office Kombiteks is not installed. Please install it first.",
     };
   }
 
@@ -865,7 +865,7 @@ export function startAll(): { success: boolean; error?: string } {
   // Start adapter
   const adapterOk = startAdapter();
   if (!adapterOk) {
-    return { success: false, error: "Failed to start Hermes adapter" };
+    return { success: false, error: "Failed to start Office adapter" };
   }
 
   return { success: true };

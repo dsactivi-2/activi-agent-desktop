@@ -156,9 +156,9 @@ function unsupportedInRemote<T>(): KanbanResult<T> {
   return {
     success: false,
     error:
-      "Kanban requires either a local Hermes install or SSH tunnel mode. " +
-      "Plain remote (HTTP+API key) mode does not yet expose the kanban API. " +
-      "Switch to SSH tunnel mode in Settings to use the board against a remote Hermes.",
+      "Orchestrator requires either a local agent engine install or SSH tunnel mode. " +
+      "Plain remote (HTTP+API key) mode does not yet expose the orchestration API. " +
+      "Switch to SSH tunnel mode in Settings to use the board against a remote agent.",
   };
 }
 

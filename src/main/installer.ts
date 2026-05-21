@@ -20,6 +20,7 @@ import { getActiveProfileNameSync, profileHome, stripAnsi } from "./utils";
 import { setupAskpass, AskpassHandle } from "./askpass";
 import { precacheSudoCredentials } from "./sudoCreds";
 import { HIDDEN_SUBPROCESS_OPTIONS } from "./process-options";
+import { APP_BRAND } from "../shared/branding";
 
 const IS_WINDOWS = process.platform === "win32";
 
@@ -556,13 +557,13 @@ export async function runHermesUpdate(
     onProgress({
       step: 1,
       totalSteps: 1,
-      title: "Updating Hermes Agent",
+      title: `Updating ${APP_BRAND.productName}`,
       detail: text.trim().slice(0, 120),
       log,
     });
   }
 
-  emit("Running hermes update...\n");
+  emit("Running agent update...\n");
 
   return new Promise((resolve, reject) => {
     const proc = spawn(HERMES_PYTHON, hermesCliArgs(["update"]), {
@@ -637,7 +638,7 @@ const STAGE_MARKERS: { pattern: RegExp; step: number; title: string }[] = [
     pattern:
       /Cloning|cloning|Updating.*repository|Repository|Installing to .*hermes-agent|Downloading PortableGit/i,
     step: 4,
-    title: "Downloading Hermes Agent",
+    title: `Downloading ${APP_BRAND.productName}`,
   },
   {
     pattern: /Creating virtual|virtual environment|uv venv|\bvenv\b/i,

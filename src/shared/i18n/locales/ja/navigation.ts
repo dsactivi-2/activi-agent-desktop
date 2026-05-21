@@ -2,7 +2,7 @@ export default {
   chat: "チャット",
   sessions: "セッション",
   agents: "プロファイル",
-  office: "オフィス",
+  office: "Office Kombiteks",
   models: "モデル",
   providers: "プロバイダ",
   skills: "スキル",

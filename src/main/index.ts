@@ -157,6 +157,7 @@ import {
   isAllowedWebviewUrl,
 } from "./security";
 import type { AppLocale } from "../shared/i18n/types";
+import { APP_BRAND } from "../shared/branding";
 import {
   sshListInstalledSkills,
   sshGetSkillContent,
@@ -364,9 +365,9 @@ function setupIPC(): void {
         event.sender.send("install-progress", {
           step: 1,
           totalSteps: 1,
-          title: "Updating remote Hermes Agent",
-          detail: "Running hermes update over SSH...",
-          log: "Running hermes update over SSH...\n",
+          title: `Updating remote ${APP_BRAND.productName}`,
+          detail: "Running agent update over SSH...",
+          log: "Running agent update over SSH...\n",
         });
         await sshRunUpdate(conn.ssh);
         await sshStartGateway(conn.ssh);
@@ -673,7 +674,7 @@ function setupIPC(): void {
                 .trim()
                 .slice(0, 80);
               new Notification({
-                title: "Hermes Agent",
+                title: APP_BRAND.productName,
                 body: preview || "Response ready",
               }).show();
             }
@@ -685,7 +686,7 @@ function setupIPC(): void {
             // Notify on error too if window not focused
             if (mainWindow && !mainWindow.isFocused()) {
               new Notification({
-                title: "Hermes Agent — Error",
+                title: `${APP_BRAND.productName} Error`,
                 body: error.slice(0, 100),
               }).show();
             }
@@ -1364,15 +1365,15 @@ function buildMenu(): void {
       label: "Help",
       submenu: [
         {
-          label: "Hermes Agent on GitHub",
+          label: "Agent Engine on GitHub",
           click: (): void => {
-            openExternalUrl("https://github.com/NousResearch/hermes-agent/");
+            openExternalUrl(APP_BRAND.upstreamUrl);
           },
         },
         {
           label: "Report an Issue",
           click: (): void => {
-            openExternalUrl("https://github.com/fathah/hermes-desktop/issues");
+            openExternalUrl(APP_BRAND.supportUrl);
           },
         },
       ],
@@ -1455,8 +1456,8 @@ function setupUpdater(): void {
 }
 
 app.whenReady().then(() => {
-  app.name = "Hermes";
-  electronApp.setAppUserModelId("com.nousresearch.hermes");
+  app.name = APP_BRAND.productName;
+  electronApp.setAppUserModelId("com.activi.agent");
 
   app.on("browser-window-created", (_, window) => {
     optimizer.watchWindowShortcuts(window);

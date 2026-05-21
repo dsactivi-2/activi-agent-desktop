@@ -1,14 +1,14 @@
 export default {
-  title: "オフィス",
-  checkingStatus: "Claw3D の状態を確認中...",
-  setupTitle: "Claw3D をセットアップ",
-  installTitle: "Claw3D をセットアップ中",
+  title: "Office Kombiteks",
+  checkingStatus: "Office Kombiteks の状態を確認中...",
+  setupTitle: "Office Kombiteks をセットアップ",
+  installTitle: "Office Kombiteks をセットアップ中",
   processLogs: "プロセスログ",
   noLogs: "ログはまだありません。サービスを開始すると出力が表示されます。",
-  loadingClaw3d: "Claw3D を読み込み中...",
-  installClaw3d: "Claw3D をインストール",
+  loadingClaw3d: "Office Kombiteks を読み込み中...",
+  installClaw3d: "Office Kombiteks をインストール",
   setupFailed: "セットアップ失敗",
-  startFailed: "Claw3D の起動に失敗しました",
+  startFailed: "Office Kombiteks の起動に失敗しました",
   portInUse:
     "ポート {{port}} は使用中です。設定で変更してから開始してください。",
   websocketUrl: "WebSocket URL",
@@ -20,11 +20,11 @@ export default {
   portInUseWarning:
     "ポート {{port}} は使用中です。設定でポートを変更するか、他のプロセスを停止してください。",
   close: "閉じる",
-  cannotLoadClaw3d: "Claw3D を読み込めません",
-  startingClaw3dService: "Claw3D サービスを起動中...",
-  clickToStart: "「開始」をクリックして Claw3D を実行",
+  cannotLoadClaw3d: "Office Kombiteks を読み込めません",
+  startingClaw3dService: "Office Kombiteks サービスを起動中...",
+  clickToStart: "「開始」をクリックして Office Kombiteks を実行",
   setupDesc1:
-    "Claw3D は Hermes エージェント用の 3D 可視化環境です。インタラクティブなオフィス空間でエージェントの動きが見られます。",
+    "Office Kombiteks は Activi エージェント用の 3D 可視化環境です。インタラクティブなオフィス空間でエージェントの動きが見られます。",
   setupDesc2:
-    "下のボタンで Claw3D を自動ダウンロード・セットアップします。リポジトリをクローンし、依存関係をすべてインストールします。",
+    "下のボタンで Office Kombiteks を自動ダウンロード・セットアップします。リポジトリをクローンし、依存関係をすべてインストールします。",
 } as const;

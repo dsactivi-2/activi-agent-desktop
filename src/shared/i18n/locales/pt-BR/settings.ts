@@ -1,7 +1,7 @@
 export default {
   title: "Configurações",
   sections: {
-    hermesAgent: "Hermes Agent",
+    hermesAgent: "Activi Agent",
     appearance: "Aparência",
     credentialPool: "Pool de Credenciais",
   },

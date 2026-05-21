@@ -433,12 +433,13 @@ function Kanban({ profile, visible }: KanbanProps): React.JSX.Element {
       <div className="kanban-container">
         <div className="kanban-empty">
           <p className="schedules-empty-text">
-            Kanban requires a local Hermes install or SSH tunnel mode.
+            Orchestrator requires a local agent engine install or SSH tunnel
+            mode.
           </p>
           <p className="schedules-empty-hint">
-            Plain remote (HTTP + API key) mode does not yet expose the kanban
-            API. Switch to local or SSH tunnel mode in Settings to manage the
-            board.
+            Plain remote (HTTP + API key) mode does not yet expose the
+            orchestration API. Switch to local or SSH tunnel mode in Settings to
+            manage the board.
           </p>
         </div>
       </div>
@@ -459,10 +460,9 @@ function Kanban({ profile, visible }: KanbanProps): React.JSX.Element {
     <div className="kanban-container">
       <div className="kanban-header">
         <div>
-          <h2 className="schedules-title">Kanban</h2>
+          <h2 className="schedules-title">Orchestrator</h2>
           <p className="schedules-subtitle">
-            Durable multi-agent board for tasks the agent can pick up and finish
-            on its own.
+            Durable multi-agent board for tasks agents can pick up and finish.
           </p>
         </div>
         <div className="schedules-header-actions">
@@ -478,7 +478,7 @@ function Kanban({ profile, visible }: KanbanProps): React.JSX.Element {
             className="btn btn-secondary"
             onClick={handleDispatch}
             disabled={actionBusy !== null}
-            data-tooltip="Run one dispatcher pass — promote ready tasks and spawn workers"
+            data-tooltip="Run one dispatcher pass: promote ready tasks and spawn workers"
           >
             <Zap size={14} />
             Dispatch

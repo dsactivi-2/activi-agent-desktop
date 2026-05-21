@@ -1,11 +1,11 @@
 export default {
-  title: "Profiles",
+  title: "Admin",
   subtitle:
-    "Each profile is an isolated Hermes workspace with its own config, memory, and skills",
+    "Create and manage isolated agent workspaces with their own config, memory, and skills",
   newAgent: "New Agent",
   namePlaceholder: "Agent name (e.g. coder)",
-  cloneConfig: "Clone config & API keys from default",
-  createFailed: "Failed to create profile",
+  cloneConfig: "Clone config and API keys from default",
+  createFailed: "Failed to create agent",
   creating: "Creating...",
   create: "Create",
   active: "Active",

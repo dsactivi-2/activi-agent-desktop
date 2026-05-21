@@ -15,7 +15,8 @@ import Schedules from "../Schedules/Schedules";
 import Kanban from "../Kanban/Kanban";
 import RemoteNotice from "../../components/RemoteNotice";
 import VerifyWarningBanner from "../../components/VerifyWarningBanner";
-import hermeslogo from "../../assets/hermes.png";
+import HermesLogo from "../../components/common/HermesLogo";
+import { APP_BRAND } from "../../../../shared/branding";
 import {
   ChatBubble,
   Clock,
@@ -214,7 +215,8 @@ function Layout({
     <div className="layout">
       <aside className="sidebar">
         <div className="sidebar-brand">
-          <img src={hermeslogo} height={30} alt="" />
+          <HermesLogo size={30} />
+          <span className="sidebar-brand-name">{APP_BRAND.name}</span>
         </div>
 
         <nav className="sidebar-nav">
@@ -300,7 +302,7 @@ function Layout({
         {visitedViews.has("agents") && (
           <div style={paneStyle("agents")}>
             {remoteMode ? (
-              <RemoteNotice feature="Profiles" />
+              <RemoteNotice feature="Admin" />
             ) : (
               <Agents
                 activeProfile={activeProfile}
@@ -388,7 +390,7 @@ function Layout({
         {visitedViews.has("kanban") && (
           <div style={paneStyle("kanban")}>
             {remoteMode ? (
-              <RemoteNotice feature="Kanban" />
+              <RemoteNotice feature="Orchestrator" />
             ) : (
               <Kanban profile={activeProfile} visible={view === "kanban"} />
             )}

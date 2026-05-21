@@ -1,7 +1,7 @@
 export default {
   title: "Settings",
   sections: {
-    hermesAgent: "Hermes Agent",
+    hermesAgent: "Agent Engine",
     appearance: "Appearance",
     credentialPool: "Credential Pool",
   },
@@ -23,7 +23,7 @@ export default {
   },
   notDetected: "Not detected",
   updatedSuccessfully: "Updated successfully!",
-  updateSuccess: "Hermes updated successfully.",
+  updateSuccess: "Agent engine updated successfully.",
   updateFailed: "Update failed.",
   version: "v{{version}}",
   proxyPlaceholder: "e.g. socks5://127.0.0.1:1080 or http://proxy:8080",

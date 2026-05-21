@@ -130,7 +130,7 @@ export function useLocalCommands({
             window.hermesAPI.getAppVersion(),
           ]);
           addAgentMessage(
-            `**Hermes Agent:** ${hermesVer || "unknown"}\n**Desktop App:** v${appVer}`,
+            `**Agent Engine:** ${hermesVer || "unknown"}\n**Desktop App:** v${appVer}`,
           );
           return true;
         }

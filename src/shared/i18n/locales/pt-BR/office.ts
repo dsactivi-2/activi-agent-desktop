@@ -1,14 +1,14 @@
 export default {
-  title: "Escritório",
-  checkingStatus: "Verificando status do Claw3D...",
-  setupTitle: "Configurar Claw3D",
-  installTitle: "Configurando Claw3D",
+  title: "Office Kombiteks",
+  checkingStatus: "Verificando status do Office Kombiteks...",
+  setupTitle: "Configurar Office Kombiteks",
+  installTitle: "Configurando Office Kombiteks",
   processLogs: "Logs do Processo",
   noLogs: "Nenhum log ainda. Inicie os serviços para ver a saída.",
-  loadingClaw3d: "Carregando Claw3D...",
-  installClaw3d: "Instalar Claw3D",
+  loadingClaw3d: "Carregando Office Kombiteks...",
+  installClaw3d: "Instalar Office Kombiteks",
   setupFailed: "Falha na configuração",
-  startFailed: "Falha ao iniciar o Claw3D",
+  startFailed: "Falha ao iniciar o Office Kombiteks",
   portInUse:
     "A porta {{port}} está em uso. Altere nas configurações para iniciar.",
   websocketUrl: "URL do WebSocket",
@@ -20,11 +20,11 @@ export default {
   portInUseWarning:
     "A porta {{port}} está em uso. Por favor, altere a porta nas configurações ou pare outros processos.",
   close: "Fechar",
-  cannotLoadClaw3d: "Não foi possível carregar o Claw3D",
-  startingClaw3dService: "Iniciando serviço Claw3D...",
-  clickToStart: 'Clique em "Iniciar" para rodar o Claw3D',
+  cannotLoadClaw3d: "Não foi possível carregar o Office Kombiteks",
+  startingClaw3dService: "Iniciando serviço Office Kombiteks...",
+  clickToStart: 'Clique em "Iniciar" para rodar o Office Kombiteks',
   setupDesc1:
-    "Claw3D é um ambiente de visualização 3D para seus agentes Hermes. Ele permite que você veja seus agentes trabalhando em um espaço de escritório interativo.",
+    "Office Kombiteks é um ambiente de visualização 3D para seus agentes Activi. Ele permite que você veja seus agentes trabalhando em um espaço de escritório interativo.",
   setupDesc2:
-    "Clique abaixo para baixar e configurar automaticamente o Claw3D. Isso clonará o repositório e instalará todas as dependências.",
+    "Clique abaixo para baixar e configurar automaticamente o Office Kombiteks. Isso clonará o repositório e instalará todas as dependências.",
 } as const;

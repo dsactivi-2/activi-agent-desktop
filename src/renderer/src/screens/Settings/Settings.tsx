@@ -390,7 +390,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
     }
   }
 
-  // Parse "Hermes Agent v0.7.0 (2026.4.3) Project: ... Python: 3.11.15 OpenAI SDK: 2.30.0 Update available: ..."
+  // Parse "Activi Agent v0.7.0 (2026.4.3) Project: ... Python: 3.11.15 OpenAI SDK: 2.30.0 Update available: ..."
   const parsedVersion = (() => {
     if (!hermesVersion) return null;
     const v = hermesVersion;

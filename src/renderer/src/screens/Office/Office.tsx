@@ -45,7 +45,7 @@ function Office({
   });
   const [webviewReady, setWebviewReady] = useState(false);
   const [webviewError, setWebviewError] = useState("");
-  // Set when the main process detects a Claw3D / hermes-office service
+  // Set when the main process detects an Office Kombiteks service
   // running on the remote host (SSH tunnel mode). When present the webview
   // points at this URL and the local install/start UX is bypassed.
   const [remoteUrl, setRemoteUrl] = useState<string | null>(null);
@@ -122,9 +122,9 @@ function Office({
 
     const ONBOARDING_JS = `try { localStorage.setItem("claw3d:onboarding:completed", "true") } catch(e) {}`;
 
-    // Inject onboarding flag as early as possible (before Claw3D's scripts run).
+    // Inject onboarding flag as early as possible.
     // did-start-loading fires before any page resources load, so the injection
-    // is queued early enough that Claw3D's useOnboardingState hook sees it.
+    // is queued early enough that the office onboarding hook sees it.
     const injectOnboardingFlag = (): void => {
       if (wv.executeJavaScript) {
         wv.executeJavaScript(ONBOARDING_JS).catch(() => {});
@@ -148,7 +148,7 @@ function Office({
       if (e?.errorCode === -3) return; // Aborted — ignore (happens on reload)
       setWebviewError(
         e?.errorDescription ||
-          "Failed to load Claw3D. The dev server may still be starting up.",
+          "Failed to load Office Kombiteks. The service may still be starting up.",
       );
     };
 
@@ -200,7 +200,7 @@ function Office({
       setStarting(true);
       const result = await window.hermesAPI.claw3dStartAll(profile);
       if (!result.success) {
-        setError(result.error || "Failed to start Claw3D");
+        setError(result.error || "Failed to start Office Kombiteks");
         setStarting(false);
       } else {
         // Give processes a moment to actually start, polling will confirm
@@ -243,9 +243,9 @@ function Office({
       ? Math.round((progress.step / progress.totalSteps) * 100)
       : 0;
 
-  // Remote Claw3D (SSH tunnel mode) takes precedence: the remote
-  // hermes-office.service already runs, so we point the webview at it
-  // rather than asking the user to install Claw3D locally.
+  // Remote Office Kombiteks (SSH tunnel mode) takes precedence: the remote
+  // office service already runs, so we point the webview at it rather than
+  // asking the user to install Office Kombiteks locally.
   const claw3dUrl = remoteUrl || `http://localhost:${port}`;
 
   // --- Checking ---
@@ -275,17 +275,6 @@ function Office({
             <div className="office-setup-actions">
               <button className="btn btn-primary" onClick={handleInstall}>
                 {t("office.installClaw3d")}
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={() =>
-                  window.hermesAPI.openExternal(
-                    "https://github.com/iamlukethedev/Claw3D",
-                  )
-                }
-              >
-                <ExternalLink size={14} />
-                {t("office.viewOnGithub")}
               </button>
             </div>
           </div>

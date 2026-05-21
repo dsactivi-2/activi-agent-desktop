@@ -1,8 +1,8 @@
 export default {
   chat: "Chat",
   sessions: "Sessions",
-  agents: "Profiles",
-  office: "Office",
+  agents: "Admin",
+  office: "Office Kombiteks",
   models: "Models",
   providers: "Providers",
   skills: "Skills",
@@ -10,7 +10,7 @@ export default {
   memory: "Memory",
   tools: "Tools",
   schedules: "Schedules",
-  kanban: "Kanban",
+  kanban: "Orchestrator",
   gateway: "Gateway",
   settings: "Settings",
 } as const;

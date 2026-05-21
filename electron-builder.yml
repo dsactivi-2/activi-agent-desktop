@@ -1,5 +1,5 @@
-appId: com.nousresearch.hermes
-productName: Hermes Agent
+appId: com.activi.agent
+productName: Activi Agent
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: hermes-agent
+  executableName: activi-agent
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
@@ -42,13 +42,12 @@ linux:
     - deb
     - rpm
   maintainer: electronjs.org
-  vendor: Nous Research
+  vendor: Activi
   category: Utility
-  synopsis: Self-improving AI assistant desktop app
+  synopsis: AI agent desktop workspace
   description: >-
-    Hermes Desktop is a native desktop app for installing, configuring, and chatting
-    with Hermes Agent — a self-improving AI assistant with tool use, multi-platform
-    messaging, and a closed learning loop.
+    Activi Agent is a native desktop app for installing, configuring, and running
+    AI agent workspaces with chat, profiles, tools, scheduled jobs, and orchestration.
 appImage:
   artifactName: ${name}-${version}.${ext}
 rpm:
@@ -56,5 +55,5 @@ rpm:
 npmRebuild: false
 publish:
   provider: github
-  owner: fathah
-  repo: hermes-desktop
+  owner: dsactivi-2
+  repo: activi-agent-desktop

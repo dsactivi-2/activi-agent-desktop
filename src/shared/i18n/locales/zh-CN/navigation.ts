@@ -2,7 +2,7 @@ export default {
   chat: "聊天",
   sessions: "会话",
   agents: "档案",
-  office: "工作区",
+  office: "Office Kombiteks",
   models: "模型",
   providers: "提供商",
   skills: "技能",

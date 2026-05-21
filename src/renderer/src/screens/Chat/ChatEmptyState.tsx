@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Search, Clock, Mail, Code, ChartLine, Bell } from "lucide-react";
-import icon from "../../assets/icon.png";
+import HermesLogo from "../../components/common/HermesLogo";
 import { useI18n } from "../../components/useI18n";
 
 interface Suggestion {
@@ -54,7 +54,7 @@ export const ChatEmptyState = memo(function ChatEmptyState({
   return (
     <div className="chat-empty">
       <div className="chat-empty-icon">
-        <img src={icon} width={64} height={64} alt="" />
+        <HermesLogo size={64} />
       </div>
       <div className="chat-empty-text">{t("chat.emptyTitle")}</div>
       <div className="chat-empty-hint">{t("chat.emptyHint")}</div>

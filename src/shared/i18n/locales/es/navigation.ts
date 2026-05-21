@@ -2,7 +2,7 @@ export default {
   chat: "Chat",
   sessions: "Sesiones",
   agents: "Perfiles",
-  office: "Office",
+  office: "Office Kombiteks",
   models: "Modelos",
   providers: "Proveedores",
   skills: "Habilidades",
