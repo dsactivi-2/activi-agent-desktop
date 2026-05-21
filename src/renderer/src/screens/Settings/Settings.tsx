@@ -8,14 +8,11 @@ import {
   ChevronDown,
   Download,
   FileText,
-  Send,
   Upload,
 } from "lucide-react";
-import { APP_ENDPOINTS, APP_LINKS } from "../../../../shared/app-config";
+import { APP_ENDPOINTS } from "../../../../shared/app-config";
 
-const TELEGRAM_COMMUNITY_URL = APP_LINKS.communityUrl;
 const SHOW_ENGINE_UPDATE_ACTIONS = false;
-const SHOW_COMMUNITY_SECTION = false;
 const SHOW_OPENCLAW_MIGRATION = false;
 const SHOW_DATA_BACKUP_SECTION = false;
 
@@ -553,30 +550,6 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
           )}
         </div>
       </div>
-
-      {SHOW_COMMUNITY_SECTION && (
-      <div className="settings-section">
-        <div className="settings-section-title">Community</div>
-        <div className="settings-field">
-          <div className="settings-field-hint" style={{ marginBottom: 10 }}>
-            Join our Telegram group to ask questions, report issues, and chat
-            with other Hermes users.
-          </div>
-          <div className="settings-hermes-actions">
-            <button
-              className="btn btn-secondary"
-              onClick={() =>
-                window.hermesAPI.openExternal(TELEGRAM_COMMUNITY_URL)
-              }
-              title={TELEGRAM_COMMUNITY_URL}
-            >
-              <Send size={14} style={{ marginRight: 6 }} />
-              Join Telegram Community
-            </button>
-          </div>
-        </div>
-      </div>
-      )}
 
       <div className="settings-section">
         <div className="settings-section-title">

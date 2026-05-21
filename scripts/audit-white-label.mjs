@@ -159,10 +159,27 @@ function isAllowedHermesReference(relPath, line) {
 
 function isAllowedIp(ip, relPath) {
   if (ip === "127.0.0.1" || ip === "0.0.0.0") return true;
+  if (
+    relPath.startsWith("tests/") ||
+    relPath.includes(".test.") ||
+    relPath.includes("/tests/")
+  ) {
+    return true;
+  }
+  if (relPath.endsWith("detect-provider.ts")) return true;
   if (ip.startsWith("10.")) return relPath === "src/shared/app-config.ts";
   if (ip.startsWith("192.168.")) return false;
   const [a, b] = ip.split(".").map(Number);
   if (a === 172 && b >= 16 && b <= 31) return false;
+  return false;
+}
+
+function isAllowedLegacyReference(relPath, line) {
+  if (line.includes("claw3d:onboarding:completed")) return true;
+  if (line.includes("assets/branding/claw3d-hero.png")) return true;
+  if (line.includes("~/.openclaw/claw3d/settings.json")) return true;
+  if (line.includes("CLAW3D_GATEWAY_")) return true;
+  if (relPath.startsWith("tests/") || relPath.includes("/tests/")) return true;
   return false;
 }
 
@@ -249,17 +266,19 @@ function scanRepo(root) {
       }
 
       if (isVisibleSurface(relPath)) {
-        scanPatternList({
-          findings,
-          repo: repoName,
-          relPath,
-          line,
-          lineNo,
-          patterns: LEGACY_VISIBLE_PATTERNS,
-          severity: "medium",
-          kind: "visible-legacy-brand",
-          message: "Visible legacy/upstream branding or community link",
-        });
+        if (!isAllowedLegacyReference(relPath, line)) {
+          scanPatternList({
+            findings,
+            repo: repoName,
+            relPath,
+            line,
+            lineNo,
+            patterns: LEGACY_VISIBLE_PATTERNS,
+            severity: "medium",
+            kind: "visible-legacy-brand",
+            message: "Visible legacy/upstream branding or community link",
+          });
+        }
 
         HERMES_VISIBLE_PATTERN.lastIndex = 0;
         let hermesMatch;

@@ -3,7 +3,6 @@
 <br/>
 <p align="center">
   <a href="https://hermes-agent.nousresearch.com/docs/"><img src="https://img.shields.io/badge/Docs-hermes--agent.nousresearch.com-FFD700?style=for-the-badge" alt="Documentation"></a>
-  <a href="https://t.me/hermes_agent_desktop"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram"></a>
   <a href="https://github.com/fathah/hermes-desktop/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
   <a href="https://github.com/fathah/hermes-desktop/releases/"><img src="https://img.shields.io/badge/Download-Releases-FF6600?style=for-the-badge" alt="Releases"></a>
 <a href="https://github.com/fathah/hermes-desktop/stargazers">
@@ -100,7 +99,7 @@ sudo dnf install ./hermes-desktop-<version>.rpm
 - **Saved models** — CRUD management for model configurations across providers
 - **Scheduled tasks** — cron job builder (minutes, hourly, daily, weekly, custom cron) with 15 delivery targets
 - **16 messaging gateways** — Telegram, Discord, Slack, WhatsApp, Signal, Matrix, Mattermost, Email (IMAP/SMTP), SMS (Twilio/Vonage), iMessage (BlueBubbles), DingTalk, Feishu/Lark, WeCom, WeChat (iLink Bot), Webhooks, Home Assistant
-- **Hermes Office (Claw3d)** — visual 3D interface with dev server and adapter management
+- **Office Kombiteks** — visual 3D interface with dev server and adapter management
 - **Backup, import & debug dump** — full data backup/restore and system diagnostics from Settings
 - **Log viewer** — view gateway and agent logs directly from the Settings screen
 - **Auto-updater** — check for and install updates via electron-updater
@@ -135,7 +134,7 @@ In local mode, chat requests go through `http://127.0.0.1:8642` with SSE streami
 | **Tools**     | Enable or disable individual toolsets                                                 |
 | **Schedules** | Create and manage cron jobs with delivery targets                                     |
 | **Gateway**   | Configure and control messaging platform integrations                                 |
-| **Office**    | Claw3d visual interface setup and management                                          |
+| **Office**    | Office Kombiteks visual interface setup and management                                |
 | **Settings**  | Provider config, credential pools, backup/import, log viewer, network settings, theme |
 
 ## Supported Providers
