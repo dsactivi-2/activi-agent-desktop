@@ -10,6 +10,7 @@ import {
 } from "../../assets/icons";
 import { getInstallCmd } from "../../constants";
 import { useI18n } from "../../components/useI18n";
+import { APP_ENDPOINTS } from "../../../../shared/app-config";
 
 interface WelcomeProps {
   error: string | null;
@@ -62,7 +63,7 @@ function Welcome({
         onRecheck();
       } else {
         setRemoteError(
-          "Could not reach Hermes at this URL. Check the URL and API key.\n\nLeave the key empty if the server accepts unauthenticated requests (e.g. via SSH tunnel to localhost).",
+          "Could not reach the agent at this URL. Check the URL and API key.\n\nLeave the key empty if the server accepts unauthenticated requests, for example through an SSH tunnel.",
         );
       }
     } catch {
@@ -79,8 +80,9 @@ function Welcome({
       setSshError("Host and username are required.");
       return;
     }
-    const port = parseInt(sshPort, 10) || 22;
-    const remotePort = parseInt(sshRemotePort, 10) || 8642;
+    const port = parseInt(sshPort, 10) || Number(APP_ENDPOINTS.defaultSshPort);
+    const remotePort =
+      parseInt(sshRemotePort, 10) || Number(APP_ENDPOINTS.defaultAgentPort);
     setSshTesting(true);
     setSshError(null);
     try {
@@ -98,12 +100,12 @@ function Welcome({
           user,
           sshKeyPath.trim(),
           remotePort,
-          18642,
+          APP_ENDPOINTS.defaultSshTunnelPort,
         );
         onRecheck();
       } else {
         setSshError(
-          "Could not connect via SSH or reach Hermes on the remote. Make sure:\n• SSH key is correct (or default ~/.ssh/id_rsa works)\n• Hermes gateway is running on the remote\n• The remote port is correct (default 8642)",
+          `Could not connect via SSH or reach the agent on the remote. Make sure:\n• SSH key is correct (or default ${APP_ENDPOINTS.sshKeyPathPlaceholder} works)\n• Activi Gateway is running on the remote\n• The remote port is correct (default ${APP_ENDPOINTS.defaultAgentPort})`,
         );
       }
     } catch (e) {
@@ -131,7 +133,7 @@ function Welcome({
           <input
             type="url"
             className="welcome-remote-input"
-            placeholder="http://192.168.1.100:8642"
+            placeholder={APP_ENDPOINTS.remoteApiUrlPlaceholder}
             value={remoteUrl}
             onChange={(e) => setRemoteUrl(e.target.value)}
             onKeyDown={(e) => {
@@ -201,7 +203,7 @@ function Welcome({
           Connect via SSH
         </h1>
         <p className="welcome-subtitle" style={{ marginBottom: 24 }}>
-          Tunnel to a remote Hermes over SSH — no exposed ports or API keys
+          Tunnel to a remote agent over SSH - no exposed ports or API keys
           needed.
         </p>
 
@@ -212,7 +214,7 @@ function Welcome({
               <input
                 type="text"
                 className="welcome-remote-input"
-                placeholder="192.168.1.100 or myserver.local"
+                placeholder={APP_ENDPOINTS.sshHostPlaceholder}
                 value={sshHost}
                 onChange={(e) => setSshHost(e.target.value)}
                 autoFocus
@@ -223,7 +225,7 @@ function Welcome({
               <input
                 type="number"
                 className="welcome-remote-input"
-                placeholder="22"
+                placeholder={APP_ENDPOINTS.defaultSshPort}
                 value={sshPort}
                 onChange={(e) => setSshPort(e.target.value)}
               />
@@ -236,7 +238,7 @@ function Welcome({
           <input
             type="text"
             className="welcome-remote-input"
-            placeholder="hermes"
+            placeholder={APP_ENDPOINTS.sshUserPlaceholder}
             value={sshUser}
             onChange={(e) => setSshUser(e.target.value)}
           />
@@ -244,27 +246,27 @@ function Welcome({
           <label className="welcome-remote-label" style={{ marginTop: 12 }}>
             Private Key Path{" "}
             <span style={{ fontWeight: 400, opacity: 0.6 }}>
-              (optional — defaults to ~/.ssh/id_rsa)
+              (optional - defaults to {APP_ENDPOINTS.sshKeyPathPlaceholder})
             </span>
           </label>
           <input
             type="text"
             className="welcome-remote-input"
-            placeholder="~/.ssh/id_rsa"
+            placeholder={APP_ENDPOINTS.sshKeyPathPlaceholder}
             value={sshKeyPath}
             onChange={(e) => setSshKeyPath(e.target.value)}
           />
 
           <label className="welcome-remote-label" style={{ marginTop: 12 }}>
-            Remote Hermes Port{" "}
+            Remote Agent Port{" "}
             <span style={{ fontWeight: 400, opacity: 0.6 }}>
-              (default 8642)
+              (default {APP_ENDPOINTS.defaultAgentPort})
             </span>
           </label>
           <input
             type="number"
             className="welcome-remote-input"
-            placeholder="8642"
+            placeholder={APP_ENDPOINTS.defaultAgentPort}
             value={sshRemotePort}
             onChange={(e) => setSshRemotePort(e.target.value)}
           />

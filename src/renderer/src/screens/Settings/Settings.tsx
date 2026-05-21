@@ -7,12 +7,17 @@ import {
   Check,
   ChevronDown,
   Download,
-  Upload,
   FileText,
   Send,
+  Upload,
 } from "lucide-react";
+import { APP_ENDPOINTS, APP_LINKS } from "../../../../shared/app-config";
 
-const TELEGRAM_COMMUNITY_URL = "https://t.me/hermes_agent_desktop";
+const TELEGRAM_COMMUNITY_URL = APP_LINKS.communityUrl;
+const SHOW_ENGINE_UPDATE_ACTIONS = false;
+const SHOW_COMMUNITY_SECTION = false;
+const SHOW_OPENCLAW_MIGRATION = false;
+const SHOW_DATA_BACKUP_SECTION = false;
 
 const LANGUAGE_NATIVE_NAMES: Record<AppLocale, string> = {
   en: "English",
@@ -472,7 +477,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
               )}
             </div>
             <div className="settings-hermes-detail">
-              <span className="settings-hermes-label">{t("common.home")}</span>
+              <span className="settings-hermes-label">Workspace</span>
               {!hermesHome ? (
                 <span className="skeleton skeleton-md" />
               ) : (
@@ -482,21 +487,30 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
               )}
             </div>
           </div>
-          {parsedVersion?.updateInfo && (
+          {SHOW_ENGINE_UPDATE_ACTIONS && parsedVersion?.updateInfo && (
             <div className="settings-hermes-update-badge">
               {parsedVersion.updateInfo}
             </div>
           )}
           <div className="settings-hermes-actions">
-            {parsedVersion?.updateInfo ? (
-              <button
-                className="btn btn-primary "
-                onClick={handleUpdateHermes}
-                disabled={updating}
-              >
-                {updating ? t("settings.updating") : t("settings.updateEngine")}
-              </button>
-            ) : (
+            {SHOW_ENGINE_UPDATE_ACTIONS && (
+              parsedVersion?.updateInfo ? (
+                <button
+                  className="btn btn-primary "
+                  onClick={handleUpdateHermes}
+                  disabled={updating}
+                >
+                  {updating
+                    ? t("settings.updating")
+                    : t("settings.updateEngine")}
+                </button>
+              ) : (
+                <button className="btn btn-secondary" disabled>
+                  {t("settings.latestVersion")}
+                </button>
+              )
+            )}
+            {!SHOW_ENGINE_UPDATE_ACTIONS && (
               <button className="btn btn-secondary" disabled>
                 {t("settings.latestVersion")}
               </button>
@@ -540,6 +554,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
         </div>
       </div>
 
+      {SHOW_COMMUNITY_SECTION && (
       <div className="settings-section">
         <div className="settings-section-title">Community</div>
         <div className="settings-field">
@@ -561,6 +576,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
           </div>
         </div>
       </div>
+      )}
 
       <div className="settings-section">
         <div className="settings-section-title">
@@ -603,7 +619,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
             {connMode === "local"
               ? t("settings.modeLocalHint")
               : connMode === "ssh"
-                ? "Tunnel to a remote Hermes over SSH — no exposed ports or API keys needed."
+                ? "Tunnel to a remote agent over SSH - no exposed ports or API keys needed."
                 : t("settings.modeRemoteHint")}
           </div>
         </div>
@@ -619,7 +635,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
                 type="url"
                 value={connRemoteUrl}
                 onChange={(e) => setConnRemoteUrl(e.target.value)}
-                placeholder="http://192.168.1.100:8642"
+                placeholder={APP_ENDPOINTS.remoteApiUrlPlaceholder}
                 onBlur={handleSaveConnection}
               />
               <div className="settings-field-hint">
@@ -676,7 +692,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
                 type="text"
                 value={sshHost}
                 onChange={(e) => setSshHost(e.target.value)}
-                placeholder="192.168.1.100 or myserver.local"
+                placeholder={APP_ENDPOINTS.sshHostPlaceholder}
               />
             </div>
             <div className="settings-field">
@@ -686,7 +702,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
                 type="number"
                 value={sshPort}
                 onChange={(e) => setSshPort(e.target.value)}
-                placeholder="22"
+                placeholder={APP_ENDPOINTS.defaultSshPort}
               />
             </div>
             <div className="settings-field">
@@ -696,14 +712,14 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
                 type="text"
                 value={sshUser}
                 onChange={(e) => setSshUser(e.target.value)}
-                placeholder="hermes"
+                placeholder={APP_ENDPOINTS.sshUserPlaceholder}
               />
             </div>
             <div className="settings-field">
               <label className="settings-field-label">
                 Private Key Path{" "}
                 <span style={{ fontWeight: 400, opacity: 0.6 }}>
-                  (optional, defaults to ~/.ssh/id_rsa)
+                  (optional, defaults to {APP_ENDPOINTS.sshKeyPathPlaceholder})
                 </span>
               </label>
               <input
@@ -711,14 +727,14 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
                 type="text"
                 value={sshKeyPath}
                 onChange={(e) => setSshKeyPath(e.target.value)}
-                placeholder="~/.ssh/id_rsa"
+                placeholder={APP_ENDPOINTS.sshKeyPathPlaceholder}
               />
             </div>
             <div className="settings-field">
               <label className="settings-field-label">
-                Remote Hermes Port{" "}
+                Remote Agent Port{" "}
                 <span style={{ fontWeight: 400, opacity: 0.6 }}>
-                  (default 8642)
+                  (default {APP_ENDPOINTS.defaultAgentPort})
                 </span>
               </label>
               <input
@@ -726,7 +742,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
                 type="number"
                 value={sshRemotePort}
                 onChange={(e) => setSshRemotePort(e.target.value)}
-                placeholder="8642"
+                placeholder={APP_ENDPOINTS.defaultAgentPort}
               />
               <div className="settings-field-hint">
                 Make sure you can run{" "}
@@ -760,7 +776,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
         )}
       </div>
 
-      {openclawFound && !migrationDismissed && (
+      {SHOW_OPENCLAW_MIGRATION && openclawFound && !migrationDismissed && (
         <div className="settings-migration-banner">
           <div className="settings-migration-header">
             <div>
@@ -930,6 +946,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
         </div>
       )}
 
+      {SHOW_DATA_BACKUP_SECTION && (
       <div className="settings-section">
         <div className="settings-section-title">
           {t("settings.dataSection")}
@@ -974,6 +991,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
           )}
         </div>
       </div>
+      )}
 
       <div className="settings-section">
         <div className="settings-section-title">

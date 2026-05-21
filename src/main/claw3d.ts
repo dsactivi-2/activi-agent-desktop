@@ -13,15 +13,17 @@ import { getEnhancedPath, HERMES_HOME } from "./installer";
 import { stripAnsi, safeWriteFile } from "./utils";
 import { getConnectionConfig } from "./config";
 import http from "http";
+import { APP_ENDPOINTS, APP_LINKS } from "../shared/app-config";
 
-const HERMES_OFFICE_REPO = "https://github.com/dsactivi-2/office-kombiteks";
+const HERMES_OFFICE_REPO =
+  process.env.ACTIVI_OFFICE_REPO_URL || APP_LINKS.officeRepoUrl;
 const HERMES_OFFICE_DIR = join(HERMES_HOME, "hermes-office");
 const DEV_PID_FILE = join(HERMES_HOME, "claw3d-dev.pid");
 const ADAPTER_PID_FILE = join(HERMES_HOME, "claw3d-adapter.pid");
 const PORT_FILE = join(HERMES_HOME, "claw3d-port");
 const WS_URL_FILE = join(HERMES_HOME, "claw3d-ws-url");
 const DEFAULT_PORT = 3000;
-const DEFAULT_WS_URL = "ws://localhost:18789";
+const DEFAULT_WS_URL = APP_ENDPOINTS.officeWebsocketUrl;
 const CLAW3D_SETTINGS_DIR = join(homedir(), ".openclaw", "claw3d");
 
 let devServerProcess: ChildProcess | null = null;

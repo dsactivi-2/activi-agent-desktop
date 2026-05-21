@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { ArrowRight, Copy, Send } from "../../assets/icons";
+import { APP_LINKS } from "../../../../shared/app-config";
 
-const TELEGRAM_COMMUNITY_URL = "https://t.me/hermes_agent_desktop";
+const TELEGRAM_COMMUNITY_URL = APP_LINKS.communityUrl;
 import { useI18n } from "../../components/useI18n";
 
 interface InstallProgress {
@@ -124,16 +125,18 @@ function Install({ onComplete, onFailed }: InstallProps): React.JSX.Element {
               <Copy size={13} />
               {copied ? t("install.copied") : t("install.copyLogs")}
             </button>
-            <button
-              className="btn btn-secondary btn-sm"
-              onClick={() =>
-                window.hermesAPI.openExternal(TELEGRAM_COMMUNITY_URL)
-              }
-              title={TELEGRAM_COMMUNITY_URL}
-            >
-              <Send size={13} />
-              Join Community
-            </button>
+            {TELEGRAM_COMMUNITY_URL && (
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() =>
+                  window.hermesAPI.openExternal(TELEGRAM_COMMUNITY_URL)
+                }
+                title={TELEGRAM_COMMUNITY_URL}
+              >
+                <Send size={13} />
+                Join Community
+              </button>
+            )}
           </div>
         </div>
       )}

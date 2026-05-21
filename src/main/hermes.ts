@@ -27,8 +27,10 @@ import { pidIsAliveAs, stripAnsi } from "./utils";
 import { readModels } from "./models";
 import { HIDDEN_SUBPROCESS_OPTIONS } from "./process-options";
 import { type Attachment, escapeXmlAttr } from "../shared/attachments";
+import { APP_ENDPOINTS } from "../shared/app-config";
 
-const LOCAL_API_URL = "http://127.0.0.1:8642";
+const LOCAL_API_URL =
+  process.env.ACTIVI_LOCAL_API_URL || APP_ENDPOINTS.localApiUrl;
 
 /**
  * Normalise a remote-mode URL the user typed into the connection
@@ -540,7 +542,7 @@ function sendMessageViaApi(
   req.on("timeout", () => {
     req.destroy();
     finish(
-      "API request timed out. Check the SSH tunnel and remote Hermes gateway.",
+      "API request timed out. Check the SSH tunnel and remote Activi Gateway.",
     );
   });
 

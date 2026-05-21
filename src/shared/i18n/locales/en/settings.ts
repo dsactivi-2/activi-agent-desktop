@@ -26,7 +26,7 @@ export default {
   updateSuccess: "Agent engine updated successfully.",
   updateFailed: "Update failed.",
   version: "v{{version}}",
-  proxyPlaceholder: "e.g. socks5://127.0.0.1:1080 or http://proxy:8080",
+  proxyPlaceholder: "e.g. socks5://<proxy-host>:1080 or http://<proxy-host>:8080",
   modelNamePlaceholder: "e.g. anthropic/claude-opus-4.6",
   modelBaseUrlPlaceholder: "http://localhost:1234/v1",
   networkSection: "Network",
@@ -50,14 +50,14 @@ export default {
     "Couldn't reach the provider's model list — you can still type a model name",
   customBaseUrlHint: "OpenAI-compatible API endpoint",
   poolHint:
-    "Add multiple API Keys for the same provider for automatic rotation and load balancing. Hermes will cycle through them.",
+    "Add multiple API Keys for the same provider for automatic rotation and load balancing. The agent will cycle through them.",
   add: "Add",
   remove: "Remove",
   keyLabel: "Key",
   empty: "(empty)",
   dataSection: "Data",
   dataHint:
-    "Export or import your Hermes configuration, sessions, skills, and memory.",
+    "Export or import your agent configuration, sessions, skills, and memory.",
   backingUp: "Backing up...",
   exportBackup: "Export Backup",
   importing: "Importing...",
@@ -74,10 +74,10 @@ export default {
   debugDump: "Debug Dump",
   migrationDetected: "OpenClaw Installation Detected",
   migrationDesc:
-    "Found OpenClaw at <code>{{path}}</code>. You can migrate your configuration, API keys, sessions, and skills to Hermes.",
+    "Found OpenClaw at <code>{{path}}</code>. Migration is currently disabled in this build.",
   migrationDismiss: "Don't show again",
   migrating: "Migrating...",
-  migrateToHermes: "Migrate to Hermes",
+  migrateToHermes: "Migrate to Activi Agent",
   skip: "Skip",
   appearanceHint: "Choose your preferred interface appearance",
   apiKeyPlaceholder: "API Key",
@@ -85,11 +85,11 @@ export default {
   connectionSection: "Connection",
   modeLocal: "Local",
   modeRemote: "Remote",
-  modeLocalHint: "Using Hermes installed on this device",
-  modeRemoteHint: "Connect to a Hermes API server on your network or cloud",
+  modeLocalHint: "Using the agent installed on this device",
+  modeRemoteHint: "Connect to an agent API server on your network or cloud",
   remoteUrl: "Remote URL",
   remoteUrlHint:
-    "The Hermes API server URL (must expose /health and /v1/chat/completions)",
+    "The agent API server URL (must expose /health and /v1/chat/completions)",
   remoteApiKey: "API Key",
   remoteApiKeyHint:
     "Matches API_SERVER_KEY on the remote host. Leave empty if the server accepts unauthenticated requests.",
@@ -98,7 +98,7 @@ export default {
   save: "Save",
   serverConfigTitle: "Server Configuration",
   serverConfigHint:
-    "You&apos;re connected to a remote Hermes server. Model selection, provider API keys, and credentials are managed on the server&apos;s <code>~/.hermes/.env</code> and <code>config.yaml</code>. Edit them on the host (e.g. <code>docker exec -it hermes vi /opt/data/.env</code>) and restart the container.",
+    "You&apos;re connected to a remote agent server. Model selection, provider API keys, and credentials are managed on the server in <code>~/.hermes/.env</code> and <code>config.yaml</code>. Edit them on the host and restart the server.",
   connectionMode: "Mode",
   switchedToLocal: "Switched to local mode",
 } as const;

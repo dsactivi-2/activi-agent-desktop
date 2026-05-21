@@ -8,6 +8,8 @@
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",
+    "audit:white-label": "node scripts/audit-white-label.mjs",
+    "audit:white-label:strict": "node scripts/audit-white-label.mjs --strict",
     "test": "vitest run",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",

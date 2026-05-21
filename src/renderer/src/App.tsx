@@ -9,9 +9,8 @@ import SplashScreen from "./screens/SplashScreen/SplashScreen";
 
 type Screen = "splash" | "welcome" | "installing" | "setup" | "main";
 
-// Minimum time the splash stays visible so the brand animation plays
-// through. Tracks the splash logo fade-in duration in main.css.
-const SPLASH_MIN_MS = 1300;
+// Minimum time the splash stays visible so the brand video can play.
+const SPLASH_MIN_MS = 3800;
 
 function App(): React.JSX.Element {
   const [screen, setScreen] = useState<Screen>("splash");
@@ -52,7 +51,7 @@ function App(): React.JSX.Element {
         if (ok) {
           next = "main";
         } else {
-          error = `Cannot reach remote Hermes at ${conn.remoteUrl}. Check the URL or switch to local mode.`;
+          error = `Cannot reach remote agent at ${conn.remoteUrl}. Check the URL or switch to local mode.`;
           next = "welcome";
         }
       } else {

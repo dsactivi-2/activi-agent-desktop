@@ -6,5 +6,5 @@ export default {
   running: "Running",
   stopped: "Stopped",
   gatewayHint:
-    "Connects Hermes to Telegram, Discord, Slack, and other platforms",
+    "Connects Activi Assistant to Telegram, Discord, Slack, and other platforms",
 } as const;
