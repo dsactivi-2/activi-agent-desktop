@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import {
+  existsSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -11,6 +17,12 @@ const DEFAULT_OFFICE_ROOT = "/private/tmp/office-kombiteks";
 
 const args = process.argv.slice(2);
 const options = {
+  apply: args.includes("--apply") && !args.includes("--dry-run"),
+  fix:
+    args.includes("--fix") ||
+    args.includes("--fix-all-low") ||
+    args.includes("--apply"),
+  fixAllLow: args.includes("--fix-all-low"),
   strict: args.includes("--strict"),
   json: args.includes("--json"),
   withChecks: args.includes("--with-checks"),
@@ -151,7 +163,9 @@ function isAllowedHermesReference(relPath, line) {
   if (relPath.startsWith("src/renderer/src/components/common/HermesLogo")) {
     return true;
   }
-  if (relPath.startsWith("src/renderer/src/screens/Chat/hooks/useLocalCommands")) {
+  if (
+    relPath.startsWith("src/renderer/src/screens/Chat/hooks/useLocalCommands")
+  ) {
     return true;
   }
   return false;
@@ -183,7 +197,51 @@ function isAllowedLegacyReference(relPath, line) {
   return false;
 }
 
-function addFinding(findings, severity, repo, relPath, lineNo, kind, message, value) {
+function isSafeVisibleHermesAutoFix(relPath, line) {
+  if (!isVisibleSurface(relPath)) return false;
+  if (isAllowedHermesReference(relPath, line)) return false;
+  if (!line.includes("Hermes")) return false;
+
+  if (options.fixAllLow) return true;
+
+  const technicalMarkers = [
+    ".hermes",
+    "/hermes",
+    "hermes-",
+    "hermes_",
+    "hermes.",
+    "hermesAPI",
+    "HERMES_",
+    "localStorage",
+    "getItem(",
+    "setItem(",
+    "removeItem(",
+  ];
+  if (technicalMarkers.some((marker) => line.includes(marker))) return false;
+
+  return (
+    relPath.startsWith("src/shared/i18n/locales/") ||
+    relPath.startsWith("src/renderer/")
+  );
+}
+
+function replaceHermesBrandText(line) {
+  return line
+    .replace(/\bAgente Hermes\b/g, "Activi Agent")
+    .replace(/\bHermes Agent\b/g, "Activi Agent")
+    .replace(/\bHermes\b/g, "Activi Agent");
+}
+
+function addFinding(
+  findings,
+  severity,
+  repo,
+  relPath,
+  lineNo,
+  kind,
+  message,
+  value,
+) {
   findings.push({
     severity,
     repo,
@@ -195,18 +253,38 @@ function addFinding(findings, severity, repo, relPath, lineNo, kind, message, va
   });
 }
 
-function scanPatternList({ findings, repo, relPath, line, lineNo, patterns, severity, kind, message }) {
+function scanPatternList({
+  findings,
+  repo,
+  relPath,
+  line,
+  lineNo,
+  patterns,
+  severity,
+  kind,
+  message,
+}) {
   for (const pattern of patterns) {
     pattern.lastIndex = 0;
     let match;
     while ((match = pattern.exec(line))) {
-      addFinding(findings, severity, repo, relPath, lineNo, kind, message, match[0]);
+      addFinding(
+        findings,
+        severity,
+        repo,
+        relPath,
+        lineNo,
+        kind,
+        message,
+        match[0],
+      );
     }
   }
 }
 
 function scanRepo(root) {
-  const repoName = root === DEFAULT_DESKTOP_ROOT ? "desktop" : root.split("/").pop();
+  const repoName =
+    root === DEFAULT_DESKTOP_ROOT ? "desktop" : root.split("/").pop();
   const findings = [];
   const files = walk(root);
 
@@ -303,6 +381,59 @@ function scanRepo(root) {
   return { root, repoName, filesScanned: files.length, findings };
 }
 
+function collectAutoFixes(repoReport) {
+  const fixesByFile = new Map();
+
+  for (const finding of repoReport.findings) {
+    if (finding.kind !== "visible-hermes-reference") continue;
+
+    const filePath = join(repoReport.root, finding.file);
+    const content = readFileSync(filePath, "utf8");
+    const lines = content.split(/\r?\n/);
+    const line = lines[finding.line - 1];
+
+    if (!isSafeVisibleHermesAutoFix(finding.file, line)) continue;
+
+    const replacement = replaceHermesBrandText(line);
+    if (replacement === line) continue;
+
+    if (!fixesByFile.has(filePath)) {
+      fixesByFile.set(filePath, {
+        repo: repoReport.repoName,
+        file: finding.file,
+        filePath,
+        content,
+        lines,
+        fixes: [],
+      });
+    }
+
+    fixesByFile.get(filePath).fixes.push({
+      line: finding.line,
+      kind: "safe-visible-hermes-reference",
+      before: line,
+      after: replacement,
+    });
+  }
+
+  return [...fixesByFile.values()];
+}
+
+function applyAutoFixes(repoReports) {
+  const fileFixes = repoReports.flatMap(collectAutoFixes);
+
+  if (options.apply) {
+    for (const fileFix of fileFixes) {
+      for (const fix of fileFix.fixes) {
+        fileFix.lines[fix.line - 1] = fix.after;
+      }
+      writeFileSync(fileFix.filePath, fileFix.lines.join("\n"), "utf8");
+    }
+  }
+
+  return fileFixes;
+}
+
 function runGitStatus(root) {
   try {
     return execFileSync("git", ["status", "--short"], {
@@ -339,18 +470,26 @@ function runCommand(root, command, commandArgs) {
   }
 }
 
-const repoReports = options.roots
-  .filter((root) => existsSync(root))
-  .map((root) => ({
-    ...scanRepo(root),
-    gitStatus: runGitStatus(root),
-    checks: options.withChecks
-      ? [
-          runCommand(root, "npm", ["run", "typecheck"]),
-          runCommand(root, "npm", ["test", "--", "--run"]),
-        ]
-      : [],
-  }));
+function buildRepoReports() {
+  return options.roots
+    .filter((root) => existsSync(root))
+    .map((root) => ({
+      ...scanRepo(root),
+      gitStatus: runGitStatus(root),
+      checks: options.withChecks
+        ? [
+            runCommand(root, "npm", ["run", "typecheck"]),
+            runCommand(root, "npm", ["test", "--", "--run"]),
+          ]
+        : [],
+    }));
+}
+
+let repoReports = buildRepoReports();
+const autoFixes = options.fix ? applyAutoFixes(repoReports) : [];
+if (options.fix && options.apply) {
+  repoReports = buildRepoReports();
+}
 
 const allFindings = repoReports.flatMap((repo) => repo.findings);
 const high = allFindings.filter((finding) => finding.severity === "high");
@@ -366,7 +505,12 @@ const report = {
     high: high.length,
     medium: medium.length,
     low: low.length,
+    autoFixes: autoFixes.reduce(
+      (sum, fileFix) => sum + fileFix.fixes.length,
+      0,
+    ),
   },
+  autoFixes,
   repos: repoReports,
 };
 
@@ -381,6 +525,12 @@ if (options.json) {
     `Findings: ${report.summary.findings} ` +
       `(high ${high.length}, medium ${medium.length}, low ${low.length})`,
   );
+  if (options.fix) {
+    console.log(
+      `Fix mode: ${options.fixAllLow ? "full-low " : ""}${options.apply ? "apply" : "dry-run"} ` +
+        `(${report.summary.autoFixes} safe fixes)`,
+    );
+  }
   console.log("");
 
   for (const repo of repoReports) {
@@ -403,8 +553,26 @@ if (options.json) {
     console.log("");
   }
 
+  if (options.fix && autoFixes.length > 0) {
+    console.log("## AUTO-FIX candidates");
+    for (const fileFix of autoFixes.slice(0, 100)) {
+      for (const fix of fileFix.fixes) {
+        console.log(
+          `${fileFix.repo}:${fileFix.file}:${fix.line} ` +
+            `[${fix.kind}] ${fix.before.trim()} -> ${fix.after.trim()}`,
+        );
+      }
+    }
+    if (autoFixes.length > 100) {
+      console.log(`... ${autoFixes.length - 100} more files`);
+    }
+    console.log("");
+  }
+
   for (const severity of ["high", "medium", "low"]) {
-    const findings = allFindings.filter((finding) => finding.severity === severity);
+    const findings = allFindings.filter(
+      (finding) => finding.severity === severity,
+    );
     if (findings.length === 0) continue;
     console.log(`## ${severity.toUpperCase()} findings`);
     for (const finding of findings.slice(0, 200)) {

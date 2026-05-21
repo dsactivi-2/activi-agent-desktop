@@ -24,5 +24,6 @@ export default {
   clickToStart: '点击"启动"来运行 Office Kombiteks',
   setupDesc1:
     "Office Kombiteks 是你的 Activi 代理的 3D 可视化环境。它让你可以看到代理在交互式办公空间中工作。",
-  setupDesc2: "点击下方自动下载并设置 Office Kombiteks。这将克隆仓库并安装所有依赖。",
+  setupDesc2:
+    "点击下方自动下载并设置 Office Kombiteks。这将克隆仓库并安装所有依赖。",
 } as const;

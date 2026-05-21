@@ -54,6 +54,6 @@ export default {
     model: "檢視或切換目前模型",
     memory: "檢視 Agent 記憶",
     persona: "檢視目前人格",
-    version: "檢視 Hermes 版本",
+    version: "檢視 Activi Agent 版本",
   },
 } as const;

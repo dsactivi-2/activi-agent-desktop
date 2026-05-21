@@ -3,13 +3,7 @@ import { useTheme } from "../../components/ThemeProvider";
 import { THEME_OPTIONS } from "../../constants";
 import { useI18n } from "../../components/useI18n";
 import { APP_LOCALES, type AppLocale } from "../../../../shared/i18n";
-import {
-  Check,
-  ChevronDown,
-  Download,
-  FileText,
-  Upload,
-} from "lucide-react";
+import { Check, ChevronDown, Download, FileText, Upload } from "lucide-react";
 import { APP_ENDPOINTS } from "../../../../shared/app-config";
 
 const SHOW_ENGINE_UPDATE_ACTIONS = false;
@@ -61,7 +55,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
   const [hermesHome, setHermesHome] = useState("");
   const { theme, setTheme } = useTheme();
 
-  // Hermes engine info — initialize from localStorage cache for instant display
+  // Activi Agent engine info — initialize from localStorage cache for instant display
   const [hermesVersion, setHermesVersion] = useState<string | null>(
     getCachedVersion,
   );
@@ -490,8 +484,8 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
             </div>
           )}
           <div className="settings-hermes-actions">
-            {SHOW_ENGINE_UPDATE_ACTIONS && (
-              parsedVersion?.updateInfo ? (
+            {SHOW_ENGINE_UPDATE_ACTIONS &&
+              (parsedVersion?.updateInfo ? (
                 <button
                   className="btn btn-primary "
                   onClick={handleUpdateHermes}
@@ -505,8 +499,7 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
                 <button className="btn btn-secondary" disabled>
                   {t("settings.latestVersion")}
                 </button>
-              )
-            )}
+              ))}
             {!SHOW_ENGINE_UPDATE_ACTIONS && (
               <button className="btn btn-secondary" disabled>
                 {t("settings.latestVersion")}
@@ -920,50 +913,54 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
       )}
 
       {SHOW_DATA_BACKUP_SECTION && (
-      <div className="settings-section">
-        <div className="settings-section-title">
-          {t("settings.dataSection")}
-        </div>
-        <div className="settings-field">
-          <div className="settings-field-hint" style={{ marginBottom: 10 }}>
-            {t("settings.dataHint")}
+        <div className="settings-section">
+          <div className="settings-section-title">
+            {t("settings.dataSection")}
           </div>
-          <div className="settings-hermes-actions">
-            <button
-              className="btn btn-secondary"
-              onClick={handleBackup}
-              disabled={backingUp}
-            >
-              <Download size={14} style={{ marginRight: 6 }} />
-              {backingUp ? t("settings.backingUp") : t("settings.exportBackup")}
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={handleImport}
-              disabled={importing}
-            >
-              <Upload size={14} style={{ marginRight: 6 }} />
-              {importing ? t("settings.importing") : t("settings.importBackup")}
-            </button>
+          <div className="settings-field">
+            <div className="settings-field-hint" style={{ marginBottom: 10 }}>
+              {t("settings.dataHint")}
+            </div>
+            <div className="settings-hermes-actions">
+              <button
+                className="btn btn-secondary"
+                onClick={handleBackup}
+                disabled={backingUp}
+              >
+                <Download size={14} style={{ marginRight: 6 }} />
+                {backingUp
+                  ? t("settings.backingUp")
+                  : t("settings.exportBackup")}
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={handleImport}
+                disabled={importing}
+              >
+                <Upload size={14} style={{ marginRight: 6 }} />
+                {importing
+                  ? t("settings.importing")
+                  : t("settings.importBackup")}
+              </button>
+            </div>
+            {backupResult && (
+              <div
+                className={`settings-hermes-result ${backupResult.includes("created") || backupResult.includes("success") ? "success" : "error"}`}
+                style={{ marginTop: 8 }}
+              >
+                {backupResult}
+              </div>
+            )}
+            {importResult && (
+              <div
+                className={`settings-hermes-result ${importResult.includes("complete") ? "success" : "error"}`}
+                style={{ marginTop: 8 }}
+              >
+                {importResult}
+              </div>
+            )}
           </div>
-          {backupResult && (
-            <div
-              className={`settings-hermes-result ${backupResult.includes("created") || backupResult.includes("success") ? "success" : "error"}`}
-              style={{ marginTop: 8 }}
-            >
-              {backupResult}
-            </div>
-          )}
-          {importResult && (
-            <div
-              className={`settings-hermes-result ${importResult.includes("complete") ? "success" : "error"}`}
-              style={{ marginTop: 8 }}
-            >
-              {importResult}
-            </div>
-          )}
         </div>
-      </div>
       )}
 
       <div className="settings-section">

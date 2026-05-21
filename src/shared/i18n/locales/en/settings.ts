@@ -26,7 +26,8 @@ export default {
   updateSuccess: "Agent engine updated successfully.",
   updateFailed: "Update failed.",
   version: "v{{version}}",
-  proxyPlaceholder: "e.g. socks5://<proxy-host>:1080 or http://<proxy-host>:8080",
+  proxyPlaceholder:
+    "e.g. socks5://<proxy-host>:1080 or http://<proxy-host>:8080",
   modelNamePlaceholder: "e.g. anthropic/claude-opus-4.6",
   modelBaseUrlPlaceholder: "http://localhost:1234/v1",
   networkSection: "Network",
