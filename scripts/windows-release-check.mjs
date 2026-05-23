@@ -117,6 +117,11 @@ function checkWorkflow() {
   const area = "workflow";
 
   expectIncludes(area, workflow, "release_windows:");
+  expectIncludes(
+    area,
+    workflow,
+    "needs.prepare.outputs.is_dry_run == 'false' && needs.prepare.outputs.tag_exists == 'false'",
+  );
   expectIncludes(area, workflow, "runs-on: windows-latest");
   expectIncludes(area, workflow, "arch: [x64]");
   expectIncludes(area, workflow, "WINDOWS_CSC_LINK");

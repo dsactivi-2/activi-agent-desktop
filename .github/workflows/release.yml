@@ -63,7 +63,7 @@ jobs:
   release_mac:
     name: Build macOS (${{ matrix.arch }})
     needs: prepare
-    if: needs.prepare.outputs.tag_exists == 'false'
+    if: needs.prepare.outputs.is_dry_run == 'false' && needs.prepare.outputs.tag_exists == 'false'
     runs-on: macos-latest
     strategy:
       matrix:
