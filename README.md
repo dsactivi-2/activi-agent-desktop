@@ -3,17 +3,17 @@
 <br/>
 <p align="center">
   <a href="https://hermes-agent.nousresearch.com/docs/"><img src="https://img.shields.io/badge/Docs-hermes--agent.nousresearch.com-FFD700?style=for-the-badge" alt="Documentation"></a>
-  <a href="https://github.com/fathah/hermes-desktop/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
-  <a href="https://github.com/fathah/hermes-desktop/releases/"><img src="https://img.shields.io/badge/Download-Releases-FF6600?style=for-the-badge" alt="Releases"></a>
-<a href="https://github.com/fathah/hermes-desktop/stargazers">
-  <img src="https://img.shields.io/github/stars/fathah/hermes-desktop?style=for-the-badge&color=FFD700&label=Stars" alt="Stars">
+  <a href="https://github.com/dsactivi-2/activi-agent-desktop/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
+  <a href="https://github.com/dsactivi-2/activi-agent-desktop/releases/"><img src="https://img.shields.io/badge/Download-Releases-FF6600?style=for-the-badge" alt="Releases"></a>
+<a href="https://github.com/dsactivi-2/activi-agent-desktop/stargazers">
+  <img src="https://img.shields.io/github/stars/dsactivi-2/activi-agent-desktop?style=for-the-badge&color=FFD700&label=Stars" alt="Stars">
 </a>
-  <a href="https://github.com/fathah/hermes-desktop/releases/">
-  <img src="https://img.shields.io/github/downloads/fathah/hermes-desktop/total?style=for-the-badge&color=00B496&label=Total%20Downloads" alt="Downloads">
+  <a href="https://github.com/dsactivi-2/activi-agent-desktop/releases/">
+  <img src="https://img.shields.io/github/downloads/dsactivi-2/activi-agent-desktop/total?style=for-the-badge&color=00B496&label=Total%20Downloads" alt="Downloads">
 </a>
 </p>
 
-> **This project is in active development.** Features may change, and some things might break. If you run into a problem or have an idea, [open an issue](https://github.com/fathah/hermes-desktop/issues). Contributions are welcome!
+> **This project is in active development.** Features may change, and some things might break. If you run into a problem or have an idea, [open an issue](https://github.com/dsactivi-2/activi-agent-desktop/issues). Contributions are welcome!
 
 ## Languages
 
@@ -26,7 +26,7 @@ Instead of managing the CLI by hand, the app walks through install, provider set
 
 ## Install
 
-Download the latest build from the [Releases](https://github.com/fathah/hermes-desktop/releases/) page.
+Download the latest build from the [Releases](https://github.com/dsactivi-2/activi-agent-desktop/releases/) page.
 
 | Platform       | File                    |
 | -------------- | ----------------------- |
@@ -41,12 +41,12 @@ Download the latest build from the [Releases](https://github.com/fathah/hermes-d
 Once the manifest has been accepted into [`microsoft/winget-pkgs`](https://github.com/microsoft/winget-pkgs), you can install with:
 
 ```powershell
-winget install NousResearch.HermesDesktop
+winget install Activi.ActiviAgent
 ```
 
 Until then, download the `.exe` from the Releases page.
 
-> **Windows users:** The installer is not code-signed. Windows SmartScreen will warn on first launch — click "More info" → "Run anyway".
+> **Windows users:** Test builds may be unsigned until Windows code-signing secrets are configured in CI. Unsigned installers can trigger SmartScreen warnings on first launch.
 
 > **WSL users:** If the installer stalls at `Switching to root user to install dependencies...`, Playwright is waiting for a sudo password that has no TTY to read from. Grant passwordless sudo for the install, then revert when finished:
 >
@@ -56,12 +56,11 @@ Until then, download the `.exe` from the Releases page.
 > sudo rm /etc/sudoers.d/hermes-install
 > ```
 >
-> Tracked in [#109](https://github.com/fathah/hermes-desktop/issues/109).
 
 ### Fedora (RPM)
 
 ```bash
-sudo dnf install ./hermes-desktop-<version>.rpm
+sudo dnf install ./activi-desktop-<version>.rpm
 ```
 
 > **Fedora users:** The `.rpm` is not GPG-signed. If your system enforces signature checking, append `--nogpgcheck` to the install command. Auto-update is not supported for `.rpm` builds (limitation of `electron-updater`); reinstall the new `.rpm` to update.

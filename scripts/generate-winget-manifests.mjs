@@ -2,10 +2,10 @@
 //
 // Fills the YAML templates in build/winget/ with the current version,
 // installer URL, and SHA256 of the NSIS installer in dist/, and writes
-// the result under dist/winget/manifests/n/NousResearch/HermesDesktop/<version>/.
+// the result under the winget package identifier path.
 //
-// Run from CLI: VERSION=0.2.3 PUBLISH_OWNER=fathah node scripts/generate-winget-manifests.mjs
-// Or import as ESM and call generateWingetManifests({ rootDir, version, name, publishOwner }).
+// Run from CLI: VERSION=0.4.5 node scripts/generate-winget-manifests.mjs
+// Or import as ESM and call generateWingetManifests({ rootDir, version, name, releaseOwner, releaseRepo, packageIdentifier }).
 
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -17,13 +17,15 @@ export function generateWingetManifests({
   rootDir,
   version,
   name,
-  publishOwner,
+  releaseOwner,
+  releaseRepo,
+  packageIdentifier,
 }) {
   const exePath = join(rootDir, "dist", `${name}-${version}-setup.exe`);
   if (!existsSync(exePath)) {
     throw new Error(
       `NSIS installer not found at ${exePath}. ` +
-        `Run electron-builder --win nsis first, or download the windows-artifacts CI artifact into dist/.`,
+        `Run electron-builder --win nsis first, or download the windows-x64-artifacts CI artifact into dist/.`,
     );
   }
 
@@ -32,11 +34,12 @@ export function generateWingetManifests({
     .digest("hex")
     .toUpperCase();
   const releaseDate = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-  const installerUrl = `https://github.com/${publishOwner}/hermes-desktop/releases/download/v${version}/${name}-${version}-setup.exe`;
-  const releaseNotesUrl = `https://github.com/${publishOwner}/hermes-desktop/releases/tag/v${version}`;
+  const installerUrl = `https://github.com/${releaseOwner}/${releaseRepo}/releases/download/v${version}/${name}-${version}-setup.exe`;
+  const releaseNotesUrl = `https://github.com/${releaseOwner}/${releaseRepo}/releases/tag/v${version}`;
 
   const replacements = {
     VERSION: version,
+    PACKAGE_IDENTIFIER: packageIdentifier,
     INSTALLER_URL: installerUrl,
     INSTALLER_SHA256: sha256,
     RELEASE_DATE: releaseDate,
@@ -57,25 +60,26 @@ export function generateWingetManifests({
         `This script must be run from the repo root.`,
     );
   }
+  const identifierParts = packageIdentifier.split(".");
+  if (identifierParts.length < 2 || identifierParts.some((part) => !part)) {
+    throw new Error(`Invalid winget package identifier: ${packageIdentifier}`);
+  }
   const outDir = join(
     rootDir,
     "dist",
     "winget",
     "manifests",
-    "n",
-    "NousResearch",
-    "HermesDesktop",
+    identifierParts[0][0].toLowerCase(),
+    ...identifierParts,
     version,
   );
   mkdirSync(outDir, { recursive: true });
 
+  const baseName = packageIdentifier;
   const files = [
-    ["Installer.template.yaml", "NousResearch.HermesDesktop.installer.yaml"],
-    [
-      "Locale.en-US.template.yaml",
-      "NousResearch.HermesDesktop.locale.en-US.yaml",
-    ],
-    ["Version.template.yaml", "NousResearch.HermesDesktop.yaml"],
+    ["Installer.template.yaml", `${baseName}.installer.yaml`],
+    ["Locale.en-US.template.yaml", `${baseName}.locale.en-US.yaml`],
+    ["Version.template.yaml", `${baseName}.yaml`],
   ];
 
   for (const [tmplName, outName] of files) {
@@ -96,7 +100,10 @@ if (isCli) {
     rootDir,
     version: process.env.VERSION || pkg.version,
     name: pkg.name,
-    publishOwner: process.env.PUBLISH_OWNER || "fathah",
+    releaseOwner: process.env.RELEASE_OWNER || "dsactivi-2",
+    releaseRepo: process.env.RELEASE_REPO || "activi-agent-desktop",
+    packageIdentifier:
+      process.env.WINGET_PACKAGE_IDENTIFIER || "Activi.ActiviAgent",
   });
   console.log(`Winget manifests generated in ${result.outDir}`);
   console.log(`InstallerSha256: ${result.sha256}`);

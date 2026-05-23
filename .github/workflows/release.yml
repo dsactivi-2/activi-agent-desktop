@@ -160,6 +160,9 @@ jobs:
     needs: prepare
     if: needs.prepare.outputs.tag_exists == 'false'
     runs-on: windows-latest
+    strategy:
+      matrix:
+        arch: [x64]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -176,13 +179,27 @@ jobs:
       - name: Build app
         run: npm run build
 
+      - name: Report Windows signing mode
+        shell: pwsh
+        env:
+          CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:CSC_LINK)) {
+            Write-Host "WINDOWS_CSC_LINK is not configured. Building unsigned Windows installer for testing."
+          } else {
+            Write-Host "WINDOWS_CSC_LINK is configured. Electron Builder will sign Windows artifacts."
+          }
+
       - name: Package Windows artifacts
-        run: npx electron-builder --win nsis --x64 --publish never
+        env:
+          CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
+        run: npx electron-builder --win nsis --${{ matrix.arch }} --publish never
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: windows-artifacts
+          name: windows-${{ matrix.arch }}-artifacts
           path: |
             dist/*.exe
             dist/*.exe.blockmap
@@ -205,13 +222,15 @@ jobs:
       - name: Download Windows installer artifact
         uses: actions/download-artifact@v4
         with:
-          name: windows-artifacts
+          name: windows-x64-artifacts
           path: dist/
 
       - name: Generate winget manifests
         env:
           VERSION: ${{ needs.prepare.outputs.version }}
-          PUBLISH_OWNER: fathah
+          RELEASE_OWNER: dsactivi-2
+          RELEASE_REPO: activi-agent-desktop
+          WINGET_PACKAGE_IDENTIFIER: Activi.ActiviAgent
         run: node scripts/generate-winget-manifests.mjs
 
       - name: Upload winget manifests artifact
@@ -257,7 +276,7 @@ jobs:
             .readdirSync(artifactsDir)
             .filter(
               (name) =>
-                name.startsWith(`hermes-desktop-${version}-`) &&
+                name.startsWith(`activi-desktop-${version}-`) &&
                 name.endsWith("-mac.zip"),
             )
             .sort((a, b) => {
@@ -310,7 +329,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.prepare.outputs.tag }}
-          name: Hermes Desktop ${{ needs.prepare.outputs.tag }}
+          name: Activi Agent ${{ needs.prepare.outputs.tag }}
           generate_release_notes: true
           files: |
             artifacts/*.dmg

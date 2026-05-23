@@ -13,6 +13,7 @@ asarUnpack:
   - resources/**
 win:
   executableName: activi-agent
+  icon: build/icon.ico
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

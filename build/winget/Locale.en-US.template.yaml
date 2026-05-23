@@ -1,19 +1,18 @@
 # Generated from this template by scripts/generate-winget-manifests.mjs.
-PackageIdentifier: NousResearch.HermesDesktop
+PackageIdentifier: {{PACKAGE_IDENTIFIER}}
 PackageVersion: {{VERSION}}
 PackageLocale: en-US
-Publisher: Nous Research
-PublisherUrl: https://github.com/fathah/hermes-desktop
-PublisherSupportUrl: https://github.com/fathah/hermes-desktop/issues
-PackageName: Hermes Agent
-PackageUrl: https://github.com/fathah/hermes-desktop
+Publisher: Activi
+PublisherUrl: https://github.com/dsactivi-2
+PublisherSupportUrl: https://github.com/dsactivi-2/activi-agent-desktop/issues
+PackageName: Activi Agent
+PackageUrl: https://github.com/dsactivi-2/activi-agent-desktop
 License: MIT
-LicenseUrl: https://github.com/fathah/hermes-desktop/blob/main/LICENSE
-ShortDescription: Self-improving AI assistant desktop app
+LicenseUrl: https://github.com/dsactivi-2/activi-agent-desktop/blob/main/LICENSE
+ShortDescription: Native AI agent desktop workspace
 Description: |-
-  Hermes Desktop is a native desktop app for installing, configuring, and chatting
-  with Hermes Agent — a self-improving AI assistant with tool use, multi-platform
-  messaging, and a closed learning loop.
+  Activi Agent is a native desktop app for installing, configuring, and running
+  AI agent workspaces with chat, profiles, tools, scheduled jobs, and orchestration.
 Tags:
   - ai
   - agent
