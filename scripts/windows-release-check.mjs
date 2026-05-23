@@ -64,6 +64,12 @@ function expectNotIncludes(
   else fail(area, message, `Unexpected: ${needle}`);
 }
 
+function expectOccurrenceCount(area, content, needle, expectedCount, message) {
+  const actualCount = content.split(needle).length - 1;
+  if (actualCount === expectedCount) pass(area, message);
+  else fail(area, message, `Expected ${expectedCount}, found ${actualCount}`);
+}
+
 function checkPackage() {
   const pkg = JSON.parse(read("package.json"));
   const area = "package";
@@ -117,10 +123,12 @@ function checkWorkflow() {
   const area = "workflow";
 
   expectIncludes(area, workflow, "release_windows:");
-  expectIncludes(
+  expectOccurrenceCount(
     area,
     workflow,
     "needs.prepare.outputs.is_dry_run == 'false' && needs.prepare.outputs.tag_exists == 'false'",
+    3,
+    "dry-run skips macOS, Linux, and publish release jobs",
   );
   expectIncludes(area, workflow, "runs-on: windows-latest");
   expectIncludes(area, workflow, "arch: [x64]");

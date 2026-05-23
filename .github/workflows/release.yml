@@ -121,7 +121,7 @@ jobs:
   release_linux:
     name: Build Linux
     needs: prepare
-    if: needs.prepare.outputs.tag_exists == 'false'
+    if: needs.prepare.outputs.is_dry_run == 'false' && needs.prepare.outputs.tag_exists == 'false'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository

@@ -97,6 +97,7 @@ Expected result:
 - Windows x64 artifact uploaded.
 - Winget manifest artifact uploaded.
 - macOS signing/notarization path skipped; macOS release checks stay separate.
+- Linux packaging path skipped; Linux release checks stay separate.
 - No GitHub tag is created.
 - No GitHub Release is published.
 
