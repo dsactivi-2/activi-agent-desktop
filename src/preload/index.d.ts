@@ -234,9 +234,9 @@ interface HermesAPI {
   onChatError: (callback: (error: string) => void) => () => void;
 
   // Gateway
-  startGateway: () => Promise<boolean>;
-  stopGateway: () => Promise<boolean>;
-  gatewayStatus: () => Promise<boolean>;
+  startGateway: (profile?: string) => Promise<boolean>;
+  stopGateway: (profile?: string) => Promise<boolean>;
+  gatewayStatus: (profile?: string) => Promise<boolean>;
 
   // Platform toggles
   getPlatformEnabled: (profile?: string) => Promise<Record<string, boolean>>;

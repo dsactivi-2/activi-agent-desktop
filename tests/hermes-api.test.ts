@@ -125,7 +125,7 @@ describe("sendMessageViaApi forwards resumeSessionId", () => {
     capturedRequests.length = 0;
   });
 
-  it("includes session_id in request body when resumeSessionId is provided", async () => {
+  it("sends X-Hermes-Session-Id when resumeSessionId is provided", async () => {
     const testSessionId = "session-abc-123";
 
     await sendMessage(
@@ -145,7 +145,12 @@ describe("sendMessageViaApi forwards resumeSessionId", () => {
     expect(chatRequest).toBeDefined();
     const parsed = JSON.parse(chatRequest!.body);
 
-    expect(parsed.session_id).toBe(testSessionId);
+    expect(parsed).not.toHaveProperty("session_id");
+    expect(
+      (chatRequest!.options.headers as Record<string, string>)[
+        "X-Hermes-Session-Id"
+      ],
+    ).toBe(testSessionId);
   });
 
   it("does not include session_id field when resumeSessionId is absent", async () => {

@@ -95,6 +95,14 @@ describe("listProfiles", () => {
     expect(dotProfiles).toHaveLength(0);
   });
 
+  it("ignores a stray named default directory under profiles", async () => {
+    mkdirSync(join(PROFILES_DIR, "default"), { recursive: true });
+
+    const profiles = await listProfiles();
+    expect(profiles.filter((p) => p.name === "default")).toHaveLength(1);
+    expect(profiles.find((p) => p.name === "default")?.isDefault).toBe(true);
+  });
+
   it("ignores files (non-directories) under the profiles directory", async () => {
     writeFileSync(join(PROFILES_DIR, "stray.txt"), "stray");
 

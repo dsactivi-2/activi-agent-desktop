@@ -652,8 +652,11 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
         {connMode === "ssh" && (
           <>
             <div className="settings-field">
-              <label className="settings-field-label">SSH Host</label>
+              <label className="settings-field-label" htmlFor="ssh-host">
+                SSH Host
+              </label>
               <input
+                id="ssh-host"
                 className="input"
                 type="text"
                 value={sshHost}
@@ -662,8 +665,11 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
               />
             </div>
             <div className="settings-field">
-              <label className="settings-field-label">SSH Port</label>
+              <label className="settings-field-label" htmlFor="ssh-port">
+                SSH Port
+              </label>
               <input
+                id="ssh-port"
                 className="input"
                 type="number"
                 value={sshPort}
@@ -672,8 +678,11 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
               />
             </div>
             <div className="settings-field">
-              <label className="settings-field-label">Username</label>
+              <label className="settings-field-label" htmlFor="ssh-username">
+                Username
+              </label>
               <input
+                id="ssh-username"
                 className="input"
                 type="text"
                 value={sshUser}
@@ -682,13 +691,14 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
               />
             </div>
             <div className="settings-field">
-              <label className="settings-field-label">
+              <label className="settings-field-label" htmlFor="ssh-key-path">
                 Private Key Path{" "}
                 <span style={{ fontWeight: 400, opacity: 0.6 }}>
                   (optional, defaults to {APP_ENDPOINTS.sshKeyPathPlaceholder})
                 </span>
               </label>
               <input
+                id="ssh-key-path"
                 className="input"
                 type="text"
                 value={sshKeyPath}
@@ -697,13 +707,14 @@ function Settings({ profile }: { profile?: string }): React.JSX.Element {
               />
             </div>
             <div className="settings-field">
-              <label className="settings-field-label">
+              <label className="settings-field-label" htmlFor="ssh-remote-port">
                 Remote Agent Port{" "}
                 <span style={{ fontWeight: 400, opacity: 0.6 }}>
                   (default {APP_ENDPOINTS.defaultAgentPort})
                 </span>
               </label>
               <input
+                id="ssh-remote-port"
                 className="input"
                 type="number"
                 value={sshRemotePort}

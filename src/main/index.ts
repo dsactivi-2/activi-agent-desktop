@@ -160,6 +160,7 @@ import type { AppLocale } from "../shared/i18n/types";
 import { APP_BRAND } from "../shared/branding";
 import {
   sshListInstalledSkills,
+  sshSendMessage,
   sshGetSkillContent,
   sshInstallSkill,
   sshUninstallSkill,
@@ -486,6 +487,7 @@ function setupIPC(): void {
         const prev = await sshGetModelConfig(conn.ssh, profile);
         await sshSetModelConfig(conn.ssh, provider, model, baseUrl, profile);
         if (
+          (!profile || profile === "default") &&
           (await sshGatewayStatus(conn.ssh)) &&
           (prev.provider !== provider ||
             prev.model !== model ||
@@ -624,8 +626,73 @@ function setupIPC(): void {
         startGateway(profile);
       }
 
-      await ensureSshTunnelIfNeeded();
       const conn = getConnectionConfig();
+      if (conn.mode === "ssh" && conn.ssh && profile && profile !== "default") {
+        if (currentChatAbort) {
+          currentChatAbort();
+        }
+
+        let fullResponse = "";
+        const chatStartTime = Date.now();
+        let resolveChat: (v: { response: string; sessionId?: string }) => void;
+        let rejectChat: (reason?: unknown) => void;
+        const promise = new Promise<{ response: string; sessionId?: string }>(
+          (res, rej) => {
+            resolveChat = res;
+            rejectChat = rej;
+          },
+        );
+
+        const handle = sshSendMessage(
+          conn.ssh,
+          message,
+          {
+            onChunk: (chunk) => {
+              fullResponse += chunk;
+              event.sender.send("chat-chunk", chunk);
+            },
+            onDone: (sessionId) => {
+              currentChatAbort = null;
+              event.sender.send("chat-done", sessionId || "");
+              resolveChat({ response: fullResponse, sessionId });
+              if (
+                mainWindow &&
+                !mainWindow.isFocused() &&
+                Date.now() - chatStartTime > 10000
+              ) {
+                const preview = fullResponse
+                  .replace(/[#*_`~\n]+/g, " ")
+                  .trim()
+                  .slice(0, 80);
+                new Notification({
+                  title: APP_BRAND.productName,
+                  body: preview || "Response ready",
+                }).show();
+              }
+            },
+            onError: (error) => {
+              currentChatAbort = null;
+              event.sender.send("chat-error", error);
+              rejectChat(new Error(error));
+              if (mainWindow && !mainWindow.isFocused()) {
+                new Notification({
+                  title: `${APP_BRAND.productName} Error`,
+                  body: error.slice(0, 100),
+                }).show();
+              }
+            },
+          },
+          profile,
+          resumeSessionId,
+          attachments,
+        );
+
+        currentChatAbort = handle.abort;
+        return promise;
+      }
+
+      await ensureSshTunnelIfNeeded();
+
       if (conn.mode === "ssh" && conn.ssh) {
         const gatewayRunning = await sshGatewayStatus(conn.ssh);
         const tunnelHealthy = await isSshTunnelHealthy();
@@ -742,10 +809,10 @@ function setupIPC(): void {
   );
 
   // Gateway
-  ipcMain.handle("start-gateway", async () => {
+  ipcMain.handle("start-gateway", async (_event, profile?: string) => {
     const conn = getConnectionConfig();
     if (conn.mode === "ssh" && conn.ssh) {
-      await sshStartGateway(conn.ssh);
+      await sshStartGateway(conn.ssh, profile);
       return true;
     }
     if (conn.mode === "remote") {
@@ -754,12 +821,12 @@ function setupIPC(): void {
       // spawn a non-existent local hermes-agent (issue #266).
       return false;
     }
-    return startGateway();
+    return startGateway(profile);
   });
-  ipcMain.handle("stop-gateway", async () => {
+  ipcMain.handle("stop-gateway", async (_event, profile?: string) => {
     const conn = getConnectionConfig();
     if (conn.mode === "ssh" && conn.ssh) {
-      await sshStopGateway(conn.ssh);
+      await sshStopGateway(conn.ssh, profile);
       return true;
     }
     if (conn.mode === "remote") {
@@ -769,9 +836,10 @@ function setupIPC(): void {
     stopGateway(true);
     return true;
   });
-  ipcMain.handle("gateway-status", () => {
+  ipcMain.handle("gateway-status", (_event, profile?: string) => {
     const conn = getConnectionConfig();
-    if (conn.mode === "ssh" && conn.ssh) return sshGatewayStatus(conn.ssh);
+    if (conn.mode === "ssh" && conn.ssh)
+      return sshGatewayStatus(conn.ssh, profile);
     return isGatewayRunning();
   });
 
@@ -943,7 +1011,7 @@ function setupIPC(): void {
     (_event, identifier: string, _profile?: string) => {
       const conn = getConnectionConfig();
       if (conn.mode === "ssh" && conn.ssh)
-        return sshInstallSkill(conn.ssh, identifier);
+        return sshInstallSkill(conn.ssh, identifier, _profile);
       return installSkill(identifier, _profile);
     },
   );
@@ -952,7 +1020,7 @@ function setupIPC(): void {
     (_event, name: string, _profile?: string) => {
       const conn = getConnectionConfig();
       if (conn.mode === "ssh" && conn.ssh)
-        return sshUninstallSkill(conn.ssh, name);
+        return sshUninstallSkill(conn.ssh, name, _profile);
       return uninstallSkill(name, _profile);
     },
   );

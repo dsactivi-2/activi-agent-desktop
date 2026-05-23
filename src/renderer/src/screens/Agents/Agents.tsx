@@ -70,8 +70,9 @@ function Agents({
     if (result.success) {
       setShowCreate(false);
       setNewName("");
-      loadProfiles();
+      await loadProfiles();
     } else {
+      await loadProfiles();
       setError(result.error || t("agents.createFailed"));
     }
   }

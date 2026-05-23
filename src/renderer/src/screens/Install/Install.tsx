@@ -57,7 +57,7 @@ function Install({ onComplete, onFailed }: InstallProps): React.JSX.Element {
       isMounted = false;
       cleanup();
     };
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (logRef.current) {

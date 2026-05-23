@@ -133,5 +133,9 @@ export const SLASH_COMMANDS: SlashCommand[] = [
   },
   { name: "/memory", description: "Show agent memory", category: "info" },
   { name: "/persona", description: "Show current persona", category: "info" },
-  { name: "/version", description: "Show Activi Agent version", category: "info" },
+  {
+    name: "/version",
+    description: "Show Activi Agent version",
+    category: "info",
+  },
 ];

@@ -373,8 +373,11 @@ function Office({
       {showSettings && (
         <div className="office-settings-bar">
           <div className="office-setting">
-            <label className="office-setting-label">{t("common.port")}</label>
+            <label className="office-setting-label" htmlFor="office-port">
+              {t("common.port")}
+            </label>
             <input
+              id="office-port"
               className="office-port-input"
               type="number"
               min={1024}
@@ -388,10 +391,11 @@ function Office({
             />
           </div>
           <div className="office-setting">
-            <label className="office-setting-label">
+            <label className="office-setting-label" htmlFor="office-ws-url">
               {t("office.websocketUrl")}
             </label>
             <input
+              id="office-ws-url"
               className="office-ws-input"
               type="text"
               value={wsUrlInput}

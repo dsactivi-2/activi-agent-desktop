@@ -74,7 +74,6 @@ function Chat({
   // remount would discard unrelated local state (model picker, etc.).
   useEffect(() => {
     if (messages.length === 0) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHermesSessionId(null);
     }
   }, [messages]);

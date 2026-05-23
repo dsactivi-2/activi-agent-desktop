@@ -14,6 +14,8 @@
     "audit:white-label:fix:apply": "node scripts/audit-white-label.mjs --fix --apply",
     "audit:white-label:fix-all": "node scripts/audit-white-label.mjs --fix-all-low --dry-run",
     "audit:white-label:fix-all:apply": "node scripts/audit-white-label.mjs --fix-all-low --apply",
+    "audit:remote-links": "node scripts/audit-remote-links.mjs",
+    "test:remote-profile-flow": "node scripts/test-remote-profile-flow.mjs",
     "test": "vitest run",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",

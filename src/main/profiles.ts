@@ -149,6 +149,10 @@ export async function listProfiles(): Promise<ProfileInfo[]> {
       const profilePromises = dirs.map(async (name) => {
         // Skip dotfiles like .DS_Store so they don't get mistaken for profiles.
         if (name.startsWith(".")) return null;
+        // The canonical default profile is HERMES_HOME itself. A stray
+        // ~/.hermes/profiles/default directory would duplicate the default
+        // agent card and route users into an unintended profile directory.
+        if (name === "default") return null;
         if (!isValidNamedProfileName(name)) return null;
 
         const profilePath = join(PROFILES_DIR, name);

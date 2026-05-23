@@ -307,7 +307,6 @@ function sendMessageViaApi(
     model: mc.model || "hermes-agent",
     messages,
     stream: true,
-    ...(_resumeSessionId ? { session_id: _resumeSessionId } : {}),
   });
 
   const headers: Record<string, string> = {
@@ -323,6 +322,9 @@ function sendMessageViaApi(
     if (apiServerKey) {
       headers.Authorization = `Bearer ${apiServerKey}`;
     }
+  }
+  if (_resumeSessionId) {
+    headers["X-Hermes-Session-Id"] = _resumeSessionId;
   }
 
   let sessionId = _resumeSessionId || "";
