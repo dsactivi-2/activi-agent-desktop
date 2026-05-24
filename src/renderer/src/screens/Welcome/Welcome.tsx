@@ -1,14 +1,6 @@
 import { useState } from "react";
 import HermesLogo from "../../components/common/HermesLogo";
-import {
-  ArrowRight,
-  Refresh,
-  Copy,
-  Globe,
-  KeyRound,
-  Spinner,
-} from "../../assets/icons";
-import { getInstallCmd } from "../../constants";
+import { ArrowRight, Globe, KeyRound, Spinner } from "../../assets/icons";
 import { useI18n } from "../../components/useI18n";
 import { APP_ENDPOINTS } from "../../../../shared/app-config";
 
@@ -24,10 +16,7 @@ type ConnectionPanel = "none" | "remote" | "ssh";
 
 function Welcome({
   error,
-  connectionMode,
-  onStart,
   onRecheck,
-  onSwitchToLocal,
 }: WelcomeProps): React.JSX.Element {
   const { t } = useI18n();
   const [panel, setPanel] = useState<ConnectionPanel>("none");
@@ -332,48 +321,6 @@ function Welcome({
 
           <div className="welcome-actions">
             <button
-              className="btn btn-primary welcome-button"
-              onClick={onStart}
-            >
-              {t("welcome.retryInstall")}
-              <Refresh size={16} />
-            </button>
-            <div className="welcome-divider">
-              <span>{t("welcome.dividerOr")}</span>
-            </div>
-            <div className="welcome-terminal-option">
-              <p className="welcome-terminal-label">
-                {t("welcome.terminalInstallHint")}
-              </p>
-              <div className="welcome-terminal-box">
-                <code>{getInstallCmd()}</code>
-                <button
-                  className="btn-ghost welcome-copy-btn"
-                  onClick={() => navigator.clipboard.writeText(getInstallCmd())}
-                  title={t("welcome.copyInstallCommand")}
-                >
-                  <Copy size={14} />
-                </button>
-              </div>
-            </div>
-            <button
-              className="btn btn-secondary welcome-recheck-btn"
-              onClick={onRecheck}
-            >
-              {t("welcome.recheck")}
-            </button>
-            {connectionMode !== "local" && (
-              <button
-                className="btn btn-secondary welcome-recheck-btn"
-                onClick={onSwitchToLocal}
-              >
-                {t("welcome.switchToLocal")}
-              </button>
-            )}
-            <div className="welcome-divider">
-              <span>or</span>
-            </div>
-            <button
               className="btn btn-secondary welcome-recheck-btn"
               onClick={() => setPanel("ssh")}
             >
@@ -393,16 +340,6 @@ function Welcome({
         <>
           <h1 className="welcome-title">{t("welcome.title")}</h1>
           <p className="welcome-subtitle">{t("welcome.subtitle")}</p>
-          <button className="btn btn-primary welcome-button" onClick={onStart}>
-            {t("welcome.getStarted")}
-            <ArrowRight size={16} />
-          </button>
-          <p className="welcome-note">{t("welcome.installSizeHint")}</p>
-
-          <div className="welcome-divider">
-            <span>{t("welcome.dividerOr")}</span>
-          </div>
-
           <button
             className="btn btn-secondary welcome-recheck-btn"
             onClick={() => setPanel("ssh")}
